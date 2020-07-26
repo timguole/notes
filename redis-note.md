@@ -203,10 +203,69 @@ redis> pfcount key
 redis> pfmerge key srckey1 srckey2
 ```
 
+#### 位图（bitmap）
+
+```shell
+redis> setbit key offset value
+redis> getbit key offset
+redis> bitcount key # options: start/end offset
+```
+
+#### 事务
+
+- 语法错误会终止事务编辑，所有命令都没有执行
+- 运行时错误只会影响当前命令，之前和之后的命令都不影响
+
+```shell
+redis> multi # begin a transaction
+redis> ...
+redis> ...
+...
+redis> exec # execute the transaction
+
+# cancel
+redis> discard # commands after multi will be discarded
+```
+
+#### 乐观锁
+
+使用watch获取乐观锁，事务执行之前如果key改变了，事务则不执行。
+
+```shell
+redis> watch key
+reids> multi
+redis> some command
+...
+redis> exec # 'watch' will be automatically removed.
+
+redis> unwatch # manually unwatch keys
+```
+
 
 
 ### 配置文件（ /etc/redis/redis.conf ）
 
-#### databases <number>
+| 配置项目                    | 说明                                         |
+| --------------------------- | -------------------------------------------- |
+| include                     | 包含其他配置文件                             |
+| bind                        | 绑定的IP地址                                 |
+| port                        | 监听的端口号                                 |
+| protected-mode              | 只有本地机器可以访问                         |
+| databases                   | 数据库的数量，命令行使用select可以选择数据库 |
+| daemonize                   | 是否后台运行                                 |
+| logfile                     | 日志文件                                     |
+| save                        | 保存日志的频率                               |
+| rdbcompression              | rbd是否压缩                                  |
+| stop-writes-on-bgsave-error | 保存数据出错时，是否停止写操作               |
+| rdbchecksum                 | 是否在文件末尾添加CRC4校验值                 |
+| rdbfilename                 | 数据库文件名                                 |
+| dir                         | 数据库文件位置                               |
+| requirepass                 | 设置客户端连接密码；auth命令或-a参数         |
+| maxclients                  | 最大客户端连接数                             |
+| maxmemory                   | 最大内存，单位为字节                         |
+| maxmemory-policy            | 达到最大内存后的删除策略                     |
+| maxmemory-samples           | 删除数据时，以多少键为一组进行比较           |
+| appendonly                  | 是否开启该功能                               |
 
-数据库数量。默认为16，使用 select <db-id> 可以选择要操作的数据库。
+
+
