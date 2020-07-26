@@ -110,7 +110,11 @@ redis> decrby keyname value
 redis> lpush list value # prepend a value to a list
 redis> rpush list value # append a value to a list
 redis> lrange list start end
+
+# get/set by index
 redis> lindex list index # get value at index
+redis> lset list index value # must in range of `llen list`
+
 redis> llen list # length of a list
 redis> lpop list # pop from left
 redis> rpop list # pop from right
@@ -118,8 +122,7 @@ redis> lrem list count value # remove <count> values from list
 redis> ltrim list start stop # trim values out of range from start to stop
 redis> rpoplpush list1 list2 # move value from one list to another
 redis> exists list
-redis> lset list index value # must in range of `llen list`
-redis> linsert list before|after value value # just one time
+redis> linsert list before|after value value # just the first occurence
 ```
 
 #### 集合（Set）
@@ -161,14 +164,43 @@ redis> hsetnx hash key value # set key and value if key not exists
 ```shell
 redis> zadd setname <score> <value> .... # set value with a score
 redis> zrem setname value
-redis> zrange setname start end
+redis> zrange setname start end # start/end is rank, not scores
+redis> zrevrange setname start end # start/end is rank, not scores
 
 # return values whose score is between start and stop
 redis> zrangebyscore setname start end [withscore]
-redis> zrevrangebyscore setname start end [withscore]
+redis> zrevrangebyscore setname start end [withscores]
 
 redis> zcard setname # length of setname
-redis> zcount setname start end # number of values between start and stop
+redis> zcount setname start end # number of values between star/stop scores
+redis> zrank setname value # the rank of value in set
+redis> zscore setname value # the score of value in set
+```
+
+#### 地理信息（geo）
+
+geo低层数据类型为zset。
+
+```shell
+redis> geoadd key long lat name
+redis> geodist key name1 name2
+redis> geopos key name
+redis> georadius key long lat distance unit
+redis> georadiusbymember key name dist unit
+
+# return a hash string.
+# the closer of two positions, the more similar of two strings
+redis> geohash key name1 name2 ...
+```
+
+#### Hyperloglog
+
+合并结果可能有部分误差。
+
+```shell
+redis> pfadd key v1 v2 ...
+redis> pfcount key
+redis> pfmerge key srckey1 srckey2
 ```
 
 
