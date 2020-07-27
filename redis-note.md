@@ -241,6 +241,17 @@ redis> exec # 'watch' will be automatically removed.
 redis> unwatch # manually unwatch keys
 ```
 
+#### 订阅/发布
+
+```shell
+# On subscriber side
+# Multiple clients can subscribe to a channel and all wiil receive msg
+redis> subscribe channel # this client will block and wait
+
+# On publisher side
+redis> publish channel message
+```
+
 
 
 ### 配置文件（ /etc/redis/redis.conf ）
@@ -267,5 +278,55 @@ redis> unwatch # manually unwatch keys
 | maxmemory-samples           | 删除数据时，以多少键为一组进行比较           |
 | appendonly                  | 是否开启该功能                               |
 
+### 数据持久化
 
+#### RDB
+
+数据文件：/var/lib/redis/dump.rdb
+
+过程：
+
+1. fork一个子进程
+2. 创建一个临时文件用来保存当前的数据
+3. 产生rdb文件
+
+执行flushall命令或shutdown命令都会产生rdb文件。
+
+检查rdb文件：redis-check-rdb
+
+#### AOF
+
+记录所有写操作到aof文件中
+
+检测并修复aof文件：redis-check-aof --fix
+
+### 集群复制
+
+查看节点状态
+
+```shell
+# view node states
+# includes:
+# node role
+# connected followers
+reidis> info replication
+```
+
+#### 复制集群的配置
+
+首先修改配置文件（所有节点都要修改，保持password一致）
+
+```shell
+bind <host ip>
+masterauth <redis-pass>
+requirepass <redis-pass>
+```
+
+启动服务，在从节点上执行以下操作
+
+```shell
+redis> slaveof <master ip> <master port>
+```
+
+使用`info replication`检查集群状态。
 
