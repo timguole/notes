@@ -66,6 +66,8 @@ redis> exit
 redis-benchmark -h localhost -p 6379 -c 50 -n 10000
 ```
 
+------
+
 ### 基本数据类型
 
 #### 键（Key）
@@ -252,7 +254,7 @@ redis> subscribe channel # this client will block and wait
 redis> publish channel message
 ```
 
-
+------
 
 ### 配置文件（ /etc/redis/redis.conf ）
 
@@ -300,6 +302,8 @@ redis> publish channel message
 
 检测并修复aof文件：redis-check-aof --fix
 
+------
+
 ### 集群复制
 
 查看节点状态
@@ -312,7 +316,7 @@ redis> publish channel message
 reidis> info replication
 ```
 
-#### 复制集群的配置
+#### 复制集群的基本配置
 
 首先修改配置文件（所有节点都要修改，保持password一致）
 
@@ -330,3 +334,62 @@ redis> slaveof <master ip> <master port>
 
 使用`info replication`检查集群状态。
 
+#### 复制集群与哨兵
+
+哨兵用于监控master节点，如果master节点无法正常工作，哨兵会挑选一个slave节点置成新master节点。sentinel可以从master节点上自动发现slave节点和其他的sentinel节点。
+
+ubuntu 安装redis sentinel
+
+```shell
+sudo apt install redis-sentinel
+```
+
+修改配置文件（/etc/redis/sentinel.conf）
+
+```shell
+bind <host ip>
+protected-mode no
+sentinel auth-pass mymaster <redis-password>
+sentinel monitor mymaster <master-ip> <master-port> <quorum>
+```
+
+启动进程
+
+```shell
+redis-sentinel /etc/redis/sentinel.conf
+```
+
+应该配置奇数个sentinel，保证quorum数值大于一半的sentinel数量。
+
+------
+
+### 多主节点集群
+
+修改配置文件
+
+```shell
+bind <host ip>
+masterauth <redis-pass>
+requirepass <redis-pass>
+cluster-enabled yes
+```
+
+创建集群
+
+```shell
+# --cluster-replicas <num>: how many replicas a master has.
+# In this example, first 3 nodes are masters and the rest nodes are replicas.
+redis-cli -a <redia-password> --cluster create \
+			172.20.0.2{1..6}:6379 --cluster-replicas 1
+
+# connect to a master node
+redis-cli -h redis1 -a <redis-password> -c
+```
+
+添加新节点
+
+TODO
+
+重新分配slot
+
+TODO
