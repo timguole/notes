@@ -15,8 +15,6 @@ go version
 go env
 ```
 
-
-
 ## go命令环境变量
 
 `GOROOT`：Go语言环境的根目录
@@ -52,8 +50,6 @@ src目录下每个子目录代表一个包。每个子目录下的所有源文�
 5. 链接生成可执行文件
 6. 运行可执行文件
 
-
-
 ### `go build`
 
 如果是main包，则在当前目录生成可执行文件（如果接着go install 命令，则会将次文件移动到bin下）。如果为非main包，则只做语法检查，步生成任何文件。
@@ -62,7 +58,25 @@ src目录下每个子目录代表一个包。每个子目录下的所有源文�
 
 编译并安装程序到bin目录下，库则安装到pkg目录下。
 
------------
+---
+
+## 数据类型
+
+### 基本数据类型和默认初始化值：
+
+- bool // false
+- int, int8, int16, int32, int64 // 0
+- uint, uint8, uint16, uint32, uint64, uintptr // 0 or nil
+- byte // 0
+- rune // 0?
+- float32, float64 // 0.0
+- complex64, complex128 // 0?
+
+### 复合数据类型
+
+#### 字符串
+
+使用双引号或\`
 
 ## 变量
 
@@ -81,17 +95,6 @@ var (
     }
 )
 ```
-
-基本数据类型和默认初始化值：
-
-- bool // false
-- string // ""
-- int, int8, int16, int32, int64 // 0
-- uint, uint8, uint16, uint32, uint64, uintptr // 0 or nil
-- byte // 0
-- rune // 0?
-- float32, float64 // 0.0
-- complex64, complex128 // 0?
 
 ### 变量初始化
 
@@ -137,6 +140,15 @@ const (
 )
 ```
 
+## 运算符
+
+| 种类       | 符号                    |
+| ---------- | ----------------------- |
+| 数学运算符 | \+ - * / %              |
+| 逻辑运算符 | && \|\| ！ << >>        |
+| 关系运算符 | \> >= == != < <=        |
+| 位运算符   | & \| ^ &^ (一元^为取反) |
+
 ## 类型转换
 
 语法为：`v1 = type(v2)`
@@ -147,8 +159,6 @@ var b int16 = 100
 
 a = int(b)
 ```
-
-
 
 ## 关键字
 
@@ -173,5 +183,60 @@ import . "fmt"
 
 // execute the init function in a package
 import _ "fmt"
+```
+
+### if-statement
+
+```go
+if bool_expr {
+    // statements
+} else if bool_expr {
+    // statements
+} else {
+    // statements
+}
+
+if statement; bool_expr { //variable in statement is local to if
+    //
+}
+```
+
+### switch-statement
+
+默认每个case后break。也可以在在case中写break。case最后写fallthrough会执行case后紧接着的case。
+
+```go
+switch variable {
+    case v1:
+    	//
+    case v2:
+    	//
+    default:
+    	//
+}
+
+switch {
+    case bool_expr1:
+    	//
+    case bool_expr2:
+    	//
+    default:
+    	//
+}
+
+// multiple values in one case
+switch variable {
+    case v1, v2, v3:
+    	//
+    default:
+    	//
+}
+// variable is local to this switch
+switch init_statement; variable {
+    case v1:
+    	//
+    default:
+    	//
+}
 ```
 
