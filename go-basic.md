@@ -240,3 +240,95 @@ switch init_statement; variable {
 }
 ```
 
+### for-statement
+
+golang 有和C语言类似的break和continue
+
+```go
+for initial; bool_expr: statement {
+    // body
+}
+
+for bool_expr {
+    // body
+}
+
+for {
+    // body
+}
+
+```
+
+### goto
+
+```go
+	goto label_name
+	// statements
+label_name:
+	// statements
+```
+
+## 数组
+
+- 数组是一种数值类型，赋值会复制所有数据而不是复制引用
+- 可以直接使用Println打印
+- 可以直接比较是否相等，不能比较大小
+
+```go
+// define an array
+var id [SIZE] type
+
+// define and initialize
+// n < SIZE
+var array = [SIZE]type{v1, v2, ... vn}
+var array = [SIZE]type{index0: value, ... indexn: value}
+var array := [...]type{v, v, v}
+var array := [...]type{index0:v, indexn:v}
+
+// length and capacity
+len(array)
+cap(array)
+```
+
+遍历数组
+
+```go
+for i := 0; i < len(array); i++ {
+    array[i]
+}
+
+// for range
+for i, v := range array {
+    //
+}
+```
+
+赋值方式
+
+```go
+// copy value
+// array1 and array2 have their own data copies.
+array1 = array2
+```
+
+数组比较只有相等和不相等
+
+```go
+// equal if length and value are both equal
+// a1 and a2 must have the same type (length and type)
+array1 == array2
+a1 != a2
+
+```
+
+多维数组
+
+```go
+var a [SIZE][SIZE]type
+var a = [][]type{
+    {v1, v2 ...},
+    {...},
+    ...
+}
+```
+
