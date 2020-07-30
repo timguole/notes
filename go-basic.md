@@ -282,6 +282,8 @@ var id [SIZE] type
 // n < SIZE
 var array = [SIZE]type{v1, v2, ... vn}
 var array = [SIZE]type{index0: value, ... indexn: value}
+
+// the size is determined by the number of intial values
 var array := [...]type{v, v, v}
 var array := [...]type{index0:v, indexn:v}
 
@@ -330,5 +332,94 @@ var a = [][]type{
     {...},
     ...
 }
+```
+
+## 切片
+
+- 容量会自动扩展
+- 扩容时，容量是翻倍的
+- 切片是引用类型的数据
+- 切片是指针：`fmt.Printf("%p", slice)`，不需要`&`
+- 切片扩容时会改变地质，这时`append`函数返回新地址
+- 使用`slice...`展开切片；数组也可以：`array[:]...`
+- 如果切片从数组创建，在不扩容的前提下，修改切片，也会修改数组的内容
+
+```go
+// array
+var array [4]int
+
+// slice, no size
+var s []int
+
+var s := make([]int, length, capacity)
+
+// append new value
+s = append(s, v1, v2, ...)
+
+// append values of s2 to s1
+// ...expands a slice to elements
+s1 = append(s1, s2...)
+
+// iteration
+for i := 0; i < len(s); i++ {
+    //
+}
+
+for i, v := range s {
+    //
+}
+
+// create slice from array
+var s = array[start:end]
+var s = array[:end]
+var s = array[start:]
+var s = array[:]
+```
+
+深拷贝和浅拷贝
+
+- copy不会导致slice扩容，拷贝的元素个数是len(dest)和len(src)中较小的那个数值
+
+```go
+copy(dest, source)
+```
+
+## map
+
+- 引用类型
+
+创建map
+
+```go
+var m = map[key_type]value_type // nil map, can not store value
+var m = make(map[key_type]value_type) // a real map object is created
+
+var m = map[k]v{k1:v1, k2:v2, ...}
+```
+
+操作map
+
+```go
+m[key] = value
+a = m[k]
+a, haskey := m[k] // is key does not exist, haskey is false
+delete(m, key)
+```
+
+遍历map
+
+```go
+for k, v := range m {
+    //
+}
+```
+
+## 字符串
+
+```go
+var s = "abc"
+
+// get a byte
+s[sub]
 ```
 
