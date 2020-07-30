@@ -268,6 +268,19 @@ label_name:
 	// statements
 ```
 
+### defer
+
+- 延迟函数的执行；函数调用会在外层函数return之前执行
+- 有多个defer时，先defer的后执行
+- 参数在defer语句处就已经传入了函数内部
+- 可用于关闭文件之类的清理工作
+
+```go
+defer func_name()
+```
+
+
+
 ## 数组
 
 - 数组是一种数值类型，赋值会复制所有数据而不是复制引用
@@ -421,5 +434,21 @@ var s = "abc"
 
 // get a byte
 s[sub]
+```
+
+相关包：strings, strconv
+
+## 函数
+
+```go
+func func_name(param1 type, param2m type) (ret1 type, ret2 type) {
+    // body
+    return ret1, ret2
+}
+
+// variable arguments
+func name(param1 type, param2 ... type) (ret1 type, ret2 type) {
+    // body
+}
 ```
 
