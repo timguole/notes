@@ -450,5 +450,121 @@ func func_name(param1 type, param2m type) (ret1 type, ret2 type) {
 func name(param1 type, param2 ... type) (ret1 type, ret2 type) {
     // body
 }
+
+func(param type) ret type {
+    // body
+}()
+
+f:= func(param type) ret param {
+    // body
+}
+r = f(arg)
+```
+
+Closure
+
+```go
+func count(i int) func() int {
+    return func () {
+        i++
+        return i
+    }
+}
+
+f = count(5)
+f()
+f()
+```
+
+## 指针
+
+```go
+p *[2]int // a pointer to an array of two int
+p [2]*int // an array of two pointers to int
+var a = 1
+p := &a // a pointer to int
+*p // pointer dereference
+
+p *[2]int
+p[1] // the second element of an array
+
+a [3]*int
+*a[1] // value pointed by the second element of a pointer array
+
+```
+
+## 结构体
+
+```go
+type Name struct {
+    member1 type
+    member2type
+    ...
+}
+// 1
+var n Name
+n.member1 = value
+n.member2 = value
+...
+// 2
+n := Name{}
+n.member1 = value
+...
+// 3
+n := Name{member1: value, member2: value, ...}
+// 4
+n := Name{value, value, ...}
+// a pointer
+n := &Name{...}
+// deep copy
+n1 :=n2
+
+var n = *Name{value, value}
+// both are ok
+(*n).member
+n.member
+
+// new
+var n = new(Name) // a pointer
+
+var n = struct {
+    // members
+}{
+    // initialize
+}
+```
+
+anonymous filed
+
+```go
+type Name struct {
+    Type // anonymous
+    f1 type
+    f2 type
+}
+// members of Type can be accessed directly by instance of Name
+
+// 1
+n := Name{Type{v, v}, v, v}
+// 2
+n.m1 = v // directl access
+n.m2 = v // direct access
+n.m3 = v
+n.m4 = v
+// 3
+var n = Name{Type: Type{m1, m2}, m3: v, m4: v}
+```
+
+## 方法
+
+```go
+// pass value
+func (this Type) func_name(param type) {
+    
+}
+// pass pointer
+func (this *Type) func_name(param type) {
+    
+}
 ```
 
