@@ -279,7 +279,17 @@ label_name:
 defer func_name()
 ```
 
+### type
 
+```go
+// myint is differenct from int
+type myint int
+
+// aliasing
+type myint = int
+
+type myfunc func(T) (T)
+```
 
 ## 数组
 
@@ -557,14 +567,89 @@ var n = Name{Type: Type{m1, m2}, m3: v, m4: v}
 
 ## 方法
 
+- 结构体可以直接访问匿名字段的方法。
+- 也可以重写匿名字段方法
+
 ```go
 // pass value
 func (this Type) func_name(param type) {
-    
+    // body
 }
 // pass pointer
 func (this *Type) func_name(param type) {
-    
+    // body
+}
+```
+
+## 接口
+
+```go
+type Name interface {
+    funcname(param type) ret type
+    ...
+}
+
+type T1 struct {
+    //
+}
+
+type T2 struct {
+    //
+}
+
+func (this *T1)funcname(param type) ret type {
+    //
+}
+
+func (this *T2)funcname(param type) ret type {
+    //
+}
+```
+
+可以创建接口的实例，并把实现赋值给接口实例。接口实例只能访问接口方法。
+
+### 关于value receiver 和pointer receiver
+
+- value receiver可以接受value或者pointer
+- pointer receiver 只能接受pointer
+
+因此，当一个方法会改变对象时，应该定义成pointer receiver；当方法不会改变对象时，应该定义成value receiver。
+
+### 空接口
+
+```go
+type E interface {
+    // nothing
+}
+
+var a = map[string]interface{} // value can be any type
+```
+
+### 接口嵌套
+
+```go
+type A interface {
+    a()
+}
+
+type B interface {
+    A
+    b()
+}
+```
+
+### 接口断言
+
+```go
+// i is type of an interface
+ins, ok := i.(T)
+
+// here type is the keyword type
+switch i.(type) {
+    case T1:
+    	//
+    case T2:
+    	//
 }
 ```
 
