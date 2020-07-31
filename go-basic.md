@@ -653,3 +653,40 @@ switch i.(type) {
 }
 ```
 
+## error
+
+- error也是一种数据类型，是一种接口类型
+- 通过接口断言获取详细错误信息
+
+```go
+// prototype
+type error interface {
+    Error() string
+}
+```
+
+创建错误对象
+
+```go
+import "errors"
+// return apointer to errors.errorString
+e := errors.New("Error message")
+
+import "fmt"
+// formated string
+e := fmt.Errorf("format", v, v)
+```
+
+## panic & recover
+
+- 在一个函数内，panic之后的defer语句是不会执行的
+- 所有已经defer的函数执行完成后，panic才会传到上一层
+
+```go
+panic(value)
+
+// capture panic
+// sometimes call recover() in a deferred function
+v := recover()
+```
+
