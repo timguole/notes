@@ -183,6 +183,9 @@ import . "fmt"
 
 // execute the init function in a package
 import _ "fmt"
+
+// short name
+import shortname "long/path/package"
 ```
 
 ### if-statement
@@ -690,3 +693,17 @@ panic(value)
 v := recover()
 ```
 
+## 包
+
+- 使用import引入包
+- 使用package定义包名
+- 同一个目录下的包名要一致
+
+### init函数
+
+- 包可以定义自己的init函数
+- init函数不能有参数和返回值
+- init函数会在main函数之前执行，进行一些包的初始化操作
+- 一个go文件中可以有多个init函数，按照定义顺序执行
+- 同一个包的不同go文件中可以有各自的init函数，按照文件名字字母顺序排序，依次执行
+- 不同包中的init函数按照import顺序执行。
