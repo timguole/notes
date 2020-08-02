@@ -707,3 +707,7 @@ v := recover()
 - 一个go文件中可以有多个init函数，按照定义顺序执行
 - 同一个包的不同go文件中可以有各自的init函数，按照文件名字字母顺序排序，依次执行
 - 不同包中的init函数按照import顺序执行。
+
+### package time
+
+类型Time 包含wall clock和monotonic clock两种时间值，monotonic的值单调递增，不受wall clock被修改的影响。
