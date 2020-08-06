@@ -4,21 +4,32 @@
 
 **oVirt Engine**：管理整个oVirt环境的组件集合，可以运行在一个VM中。
 
-**Engine VM**：在self-hosted模式中，运行Engine的虚拟机。此虚拟机在部署时由程序自动创建。
+**Engine VM**：在self-hosted模式中，运行 Engine 的虚拟机。此虚拟机在部署时由程序自动创建。
 
-**Engine machine**：这个次会在文档中出现，和Engine VM是同义词，有时会出现全称“oVirt Engine machine”。
+**Engine machine**：这个次会在文档中出现，和 Engine VM 是同义词，有时会出现全称 “oVirt Engine machine”。
 
-**oVirt Node**：精简版本的Enterprise Linux，默认已经安装了需要的软件源；专门用来做Host。
+**oVirt Node**：精简版本的 Enterprise Linux，默认已经安装了需要的软件源；专门用来做Host。
 
 **self-hosted engine node**：运行Engine VM的主机。
 
+**self-hosted engine storage domain**：专属于 Engine VM 的存储域。
+
 **Host**：组成整个虚拟化环境的计算结点。可以是运行标准Enterprise Linux的机器，也可以是运行oVirt Node的机器。
+
+**VDSM**：运行在所有 Host 上，负责与 Engine 通信。
+
+**HA service**：只运行在 self-hosted engine node 上，负责 Engine VM 的高可用。
+
+
 
 ## 基本硬件要求
 
 - CPU支持虚拟化
+- TODO
 
-## 准备配置信息
+
+
+## 准备安装所需的信息
 
 ### 准备FQDN
 
