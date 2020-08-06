@@ -1,5 +1,15 @@
 # oVirt 
 
+## 基本术语
+
+**oVirt Engine**：管理整个oVirt环境的组件，可以运行在一个VM中。
+
+**Engine VM**：在self-hosted模式中，运行Engine的虚拟机。此虚拟机在部署时由程序自动创建。
+
+**oVirt Node**：精简版本的Enterprise Linux。专门用来做Host。
+
+**Host**：组成整个虚拟化环境的计算结点。可以是运行标准Enterprise Linux的机器，也可以是运行oVirt Node的机器。
+
 ## 基本硬件要求
 
 - CPU支持虚拟化
@@ -11,7 +21,11 @@
 
 ### FQDN
 
-TODO
+需要为以下机器准备FQDN：
+
+- 所有的host节点
+- 所有的存储节点
+- oVirt Engine VM
 
 ### 用户密码
 
@@ -27,21 +41,38 @@ TODO
 
 ## 配置DNS
 
-oVirt 机器需要一个FQDN，并且DNS服务器上要有正向和反向解析。
+oVirt 所有节点都需要一个FQDN，并且要保证可以反向解析。可以dnsmasq实现或者named。如果没有现成的DNS服务，就需要专门准备两台机器作为DNS服务器。
 
-### named服务的安装和配置
+安装dnsmasq
 
-TODO
+```shell
+yum install dnsmasq
+systemctl enable --now dnsmasq.service
+systemctl status dnsmasq # make suire service started normally
+```
+
+dnsmasq默认使用/etc/hosts文件，将准备好的IP地址和FQDN写入即可。重启服务检测dns服务是否正常
+
+```shell
+dig <FQDN>
+dig -x <IP address>
+```
 
 ## 存储配置
 
-oVirt支持NFS，iSCSI，FC，Gluster Storage。
+oVirt支持NFS，iSCSI，FC，Gluster Storage。如果使用glusterfs，oVirt 只支持replica1和replica3（glusterfs的安装配置在单独的文档中）。
 
-#### Gluster Storage配置
+除了基本的glusterfs配置之外，oVirt 使用的卷还需要额外设置：
 
-oVirt 只支持replica1和replica3。
-
-TODO
+```shell
+gluster volume set gv0 cluster.quorum-type auto
+gluster volume set gv0 network.ping-timeout 10
+gluster volume set gv0 auth.allow \*
+gluster volume set gv0 group virt
+gluster volume set gv0 storage.owner-uid 36
+gluster volume set gv0 storage.owner-gid 36
+gluster volume set gv0 server.allow-insecure on
+```
 
 ## 安装Deploy Host
 
