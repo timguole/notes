@@ -14,11 +14,21 @@
 
 **self-hosted engine storage domain**：专属于 Engine VM 的存储域。
 
-**Host**：组成整个虚拟化环境的计算结点。可以是运行标准Enterprise Linux的机器，也可以是运行oVirt Node的机器。
+**Host**：组成整个虚拟化环境的计算结点。可以是运行标准Enterprise Linux的机器，也可以是运行oVirt Node的机器。一个主机必须属于某个集群（Cluster）
 
 **VDSM**：运行在所有 Host 上，负责与 Engine 通信。
 
 **HA service**：只运行在 self-hosted engine node 上，负责 Engine VM 的高可用。
+
+**Data Center**：一组资源的逻辑集合，包括：主机集群，逻辑网络，存储域等。一个管理界面（Portal）可以管理多个 data center。oVirt 在初始安装时会创建默认的数据中心：Default。
+
+**Cluster**：集群；拥有相同CPU类型和使用相同存储域的主机组成一个集群。一个集群必须属于某个 Data Center。一个虚拟机只会在一个集群内做迁移。集群可以用来运行 VM 或者 Glusterfs Server，但是一个集群只能做一种用途。
+
+**SPM**：存储池管理者；一个赋予某个主机的角色，用于管理存储域。当拥有 SPM角色的主机出问题时，Engine 会保证重新选择一台主机。可以为不同的主机配置不同的 SPM 优先级，以保证 运行关键虚拟机的主机不会承担 SPM 角色，避免虚拟机资源被抢用。
+
+**Data Domain**：用于存储虚拟机磁盘，快照，模板，OVF 文件。一个数据中心可以有多个不同类型的数据域，但是必须都是共享类型，不能时本地类型。一个数据域只能属于一个数据中心。
+
+**ISO Domain**：存储ISO镜像，不同 data center 之间可以共享。只能是 NFS 类型。
 
 
 

@@ -21,6 +21,8 @@ Glusterfs 提供类似NFS的运程文件系统服务。Glusterfs 可以根据不
 
 首先假设有三台服务器，主机名分别为：server1，server2，server3。三台机器可以使用主机名互相访问。
 
+> 所有机器上需要配置好 NTP 服务。
+
 为了实现让glusterfs存储数据，服务器应该至少有两个块设备：一个用于操作系统，一个用于glusterfs的brick。如果有更多的磁盘，可以创建多个brick。
 
 #### 格式化磁盘
