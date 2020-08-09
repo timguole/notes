@@ -24,13 +24,15 @@
 
 **Cluster**：集群；拥有相同CPU类型和使用相同存储域的主机组成一个集群。一个集群必须属于某个 Data Center。一个虚拟机只会在一个集群内做迁移。集群可以用来运行 VM 或者 Glusterfs Server，但是一个集群只能做一种用途。
 
-**SPM**：存储池管理者；一个赋予某个主机的角色，用于管理存储域。当拥有 SPM角色的主机出问题时，Engine 会保证重新选择一台主机。可以为不同的主机配置不同的 SPM 优先级，以保证 运行关键虚拟机的主机不会承担 SPM 角色，避免虚拟机资源被抢用。
+**SPM**：存储池管理者；一个赋予某个主机的角色，用于管理存储域（修改文件信息，创建虚拟机磁盘等操作）；其它主机只能访问虚拟机磁盘镜像。当拥有 SPM角色的主机出问题时，Engine 会保证重新选择一台主机。可以为不同的主机配置不同的 SPM 优先级，以保证 运行关键虚拟机的主机不会承担 SPM 角色，避免虚拟机资源被抢用。
 
 **Data Domain**：用于存储虚拟机磁盘，快照，模板，OVF 文件。一个数据中心可以有多个不同类型的数据域，但是必须都是共享类型，不能时本地类型。一个数据域只能属于一个数据中心。
 
 **ISO Domain**：存储ISO镜像，不同 data center 之间可以共享。只能是 NFS 类型。
 
+**Virtual Machine Pool**：基于同一个模板创建的一组虚拟机。用户每次从中获取一台机器时，随机分配。默认情况下，用户的所有更改都不会保存；用户不使用时，机器处于关闭状态。
 
+**External Provider**：为 oVirt 提供服务的外部系统。比如，可以为 oVirt 提供网络服务的 Openstack neutrion 。
 
 ## 基本硬件要求
 
@@ -161,3 +163,30 @@ yum install ovirt-engine-appliance
 ## 添加 Self-hosted Engine Node
 
 添加新的 Self-hosted Engine Node，可以实现 oVirt Engine 的高可用。步骤与添加普通 Host 基本一样，只是在输入步骤3需要的基本信息后，点击 **Hosted Engine**，选择 **Deploy**，最后点击 **OK**。
+
+## 关于存储
+
+oVirt 支持两种类型的存储：文件系统类型（SAN：NFS，Glusterfs），块设备类型（NAS：iSCSI，FC）。在 SAN 上，虚拟机镜像，模板，快照以文件形式存放；在 NAS 上，LVM 管理块设备，虚拟机镜像，模板，快照都以单独的 LV 形式存储。
+
+#### NFS
+
+- 通过 Portal 将 NFS 添加到 oVirt 中后，Engine 会自动在所有主机上挂载。
+- 导出的 NFS 文件系统 需要满足 oVirt 关于组和用户的要求
+- 当需要调整现有 NFS 存储容量时，需要先将其从 Portal 中设置为维护状态，此时 oVirt 会卸载文件系统；待完成操作后，再次激活即可。
+
+oVirt 所需的 NFS 配置：
+
+```shell
+groupadd kvm -g 36
+useradd vdsm -u 36 -g 36
+chown -R 36:36 /NFS/exports
+chmod 0755 /NFS/exports
+```
+
+## 关于网络
+
+oVirt 支持三种逻辑网络构建方式：Linux Bridge，SR-IOV，OVN。默认使用 Linux Bridge。
+
+#### Label
+
+标签用于标识不同主机上连接到同一网路的网卡。网卡名字可能不同，但 oVirt 通过标签就可以将一个逻辑网络批量自动部署的所有主机上。
