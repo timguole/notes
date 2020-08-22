@@ -454,6 +454,8 @@ s[sub]
 ## 函数
 
 ```go
+// If there is only return type (and only one), parenthesis is optional.
+// Otherwise, parenthesis is required.
 func func_name(param1 type, param2m type) (ret1 type, ret2 type) {
     // body
     return ret1, ret2
@@ -464,11 +466,11 @@ func name(param1 type, param2 ... type) (ret1 type, ret2 type) {
     // body
 }
 
-func(param type) ret type {
+func(param type) (ret type) {
     // body
 }()
 
-f:= func(param type) ret param {
+f:= func(param type) type {
     // body
 }
 r = f(arg)
