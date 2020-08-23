@@ -713,3 +713,11 @@ v := recover()
 ### package time
 
 类型Time 包含wall clock和monotonic clock两种时间值，monotonic的值单调递增，不受wall clock被修改的影响。
+
+## goroutine
+
+```go
+go func_name()
+```
+
+包含 main 的 goroutine 为主协程。协程没有返回值。主协程停止后，其他协程会立即结束。
