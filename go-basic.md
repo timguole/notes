@@ -210,36 +210,36 @@ if statement; bool_expr { //variable in statement is local to if
 
 ```go
 switch variable {
-    case v1:
-    	//
-    case v2:
-    	//
-    default:
-    	//
+case v1:
+   //
+case v2:
+    //
+default:
+    //
 }
 
 switch {
-    case bool_expr1:
-    	//
-    case bool_expr2:
-    	//
-    default:
-    	//
+case bool_expr1:
+    //
+case bool_expr2:
+    //
+default:
+    //
 }
 
 // multiple values in one case
 switch variable {
-    case v1, v2, v3:
-    	//
-    default:
-    	//
+case v1, v2, v3:
+    //
+default:
+    //
 }
 // variable is local to this switch
 switch init_statement; variable {
-    case v1:
-    	//
-    default:
-    	//
+case v1:
+    //
+default:
+    //
 }
 ```
 
@@ -721,3 +721,47 @@ go func_name()
 ```
 
 包含 main 的 goroutine 为主协程。协程没有返回值。主协程停止后，其他协程会立即结束。
+
+## channel
+
+默认通道的读写都是阻塞的。对于有缓冲区的通道，当缓冲区满后，仍然会阻塞。
+
+```go
+var a chan int // a channel of int; at this point, 'a' is still nil
+a = make(chan int) // 'a' is noew a channel
+
+data := <- a // read data from a
+a <- data // write data to a
+
+c := make(chan type, LEN) // a buffered channel
+
+// test if channel is closed
+// if closed, open is false
+d, open := <-c
+
+//close channel
+close(c)
+```
+
+定向通道
+
+```go
+c := make(<- chan int) // read only
+c := make(chan <- int) // write only
+```
+
+## select
+
+任何一个通道可以读写，则执行该case，否则阻塞（在没有default的情况下）
+
+```go
+select {
+    case d := <- c1:
+    //
+    case d := <- c2:
+    //
+    default:
+    //
+}
+```
+
