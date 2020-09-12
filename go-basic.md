@@ -15,6 +15,14 @@ go version
 go env
 ```
 
+设置代理
+
+```go
+go env -w GOPROXY=https://goproxy.cn,direct
+```
+
+
+
 ## go命令环境变量
 
 `GOROOT`：Go语言环境的根目录
