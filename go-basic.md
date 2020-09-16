@@ -33,6 +33,35 @@ src目录下每个子目录代表一个包。每个子目录下的所有源文�
 >
 > main包所在目录的名字应该与将要生成的程序名字一致。
 
+## Go模块
+
+#### 创建模块
+
+go语言通过`go mod` 命令和go.mod文件管理模块
+
+```shell
+mkdir mymod
+cd mymod
+go mod mymodule # create a module named mymodule
+```
+
+#### 调用模块
+
+```shell
+mkdir myapp
+cd myapp
+go mod myapp
+vim main.go # In main.go, import mymodule
+```
+
+对于本地未发布的模块，需要修改go.mod文件。添加以下内容
+
+```go
+replace mymodule => PATH_TO_MYMODULE_ON_LOCAL_FILESYSTEM
+```
+
+
+
 ## 编译和运行
 
 ### go命令的子命令
@@ -71,6 +100,10 @@ src目录下每个子目录代表一个包。每个子目录下的所有源文�
 - rune // 0?
 - float32, float64 // 0.0
 - complex64, complex128 // 0?
+- map[type1]type2 // nil
+- []type // nil
+- func(type1, type2) (type1, type2) // nil
+- var a INTERFACE // nil
 
 ### 复合数据类型
 
