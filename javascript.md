@@ -39,6 +39,11 @@ JavaScript 语句以分号分隔。
 - 变量名字（标识符）可以以字母、下划线、$ 开头
 - 变量声明后是未定义的
 - 重复声明变量不是错误，也不影响变量的值
+- 函数内的变量是局部变量
+- 函数定义之外的变量是全局变量
+- 向未声明的变量赋值，该变量将自动成为window的属性
+- 函数内的变量如果没有使用var声明，则为全局变量
+- html中的全局对象为window
 
 声明变量：
 
@@ -109,5 +114,105 @@ var b = new Boolean;
 var o = new Object;
 ```
 
+### 函数
 
+```javascript
+function foobar() {
+    // statements
+}
+
+function () {
+    // statements
+}
+```
+
+### 字符串
+
+- 使用单引号或者双引号
+
+- 索引从0开始
+
+- 使用反斜线转义
+
+- 内置属性 length 包含字符串的长度
+
+  ```javascript
+  var s = "abc";
+  a[0] = 'b'; // now a is 'bbc'
+  var l = a.length; // 3
+  
+  var s = new String("abc") // typeof s is Object
+  typeof s // Object
+  ```
+
+  连接字符串操作
+
+  ```javascript
+  var a = 'abc';
+  var b = 'def';
+  var c = a + b;
+  
+  var d = 1;
+  var e = '2';
+  d + e; // '12'
+  d + a; // 1abc
+  ```
+
+  ### 数学运算符
+
+  JavaScript 拥有和其他语言类似的运算符（包括赋值运算）。
+
+  ### 比较运算符
+
+  JavaScript 拥有和其他语言类似的比较运算符。此外，JavaScript 还有 !== 和 ===（不仅比较值，还要比较类型）
+
+  ```javascript
+  var x = 2;
+  x == 2; // true
+  x == '2'; // true
+  x === 2; // true
+  x === '2'; // false
+  ```
+
+  ### 逻辑运算符
+
+  JavaScript 拥有和其他语言类似的逻辑运算符。
+
+  ### 条件运算符
+
+  ```javascript
+  condition ? expre : expre;
+  ```
+
+  ### 条件语句
+
+  和 C 语言类似，包括 if 和 switch。
+
+  ### 循环
+
+  for 循环的第一种语法和 C 相同。for/in 方式用于遍历对象的属性：
+
+  ```javascript
+  var cat = {name: 'tom', age: 12, gender: 'male'};
+  for (p in cat) { // x is the property name string
+      console.log(x + ': ' + cat[x]);
+  }
+  ```
+
+  
+
+## HTML 事件
+
+事件可以来自浏览器本身或者用户。事件会触发 JavaScript 执行注册的代码。常见事件有：
+
+- onclick
+- onload
+- onchange
+- onmouseover
+- onmouseout
+- onkeydown
+
+## 函数的绑定
+
+默认，函数会绑定到 window 对象，在函数中 this 代表 window。在元素的各种事件属性中，this 代表元素自己。
 
