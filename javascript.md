@@ -56,3 +56,58 @@ var age = 12;
 var height = 1.71; // float number
 ```
 
+### 基本数据类型
+
+数字、字符串（双引号或者单引号）、布尔值、null、undefined、symbol。
+
+JavaScript 的变量具有动态类型。
+
+### 引用数据类型
+
+数组、对象、函数
+
+#### 数组
+
+```javascript
+var a = new Array();
+a[0] = 'abc';
+a[1] = 'cdf';
+
+var a = new Array('a', 'b', c );
+
+var a = ['a', 'b'];
+```
+
+#### 对象
+
+```javascript
+var o = { name: "tom",
+         gender: "male",
+         age: 12,
+        run: function() {
+            return "hahaha";
+        }
+};
+
+// Access object properties
+o.name
+// or
+o["name"]
+
+// access object method without () will return the definition of that method
+o.run(); // return hahaha
+o.run; // return the method definition: function() {return "hahaha"; }
+```
+
+### 声明时确定变量类型
+
+```javascript
+var a = new Array;
+var s = new String;
+var n = new Num;
+var b = new Boolean;
+var o = new Object;
+```
+
+
+
