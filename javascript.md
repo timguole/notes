@@ -199,7 +199,21 @@ function () {
   }
   ```
 
+  while 和 do/while 循环与 C 语言类似。
   
+  JavaScript 也有 break 和 continue 语句。
+  
+  ### typeof
+  
+  typeof 操作符用于返回值的类型。
+  
+  ### null
+  
+  null 是对象类型，表示没有值。
+  
+  ### undefined
+  
+  是一种类型。没有赋值的变量就是 undefined 类型，值也为 undefined。
 
 ## HTML 事件
 
