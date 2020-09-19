@@ -25,6 +25,7 @@ server {
     # uWSGI will receive a request to URL: /api/...
     location /api/ {
 		include uwsgi_params;
+		# Refer to uWSGI doc for the correct socket path 
         uwsgi_pass unix:/run/uwsgi/app/api/socket;
 	}
     
@@ -38,7 +39,6 @@ File: /etc/uwsgi/apps-available/api.ini
 
 ```ini
 [uwsgi]
-socket = 127.0.0.1:9090
 wsgi-file = /path/to/wsgi.py
 plugin = python3
 enable-threads = true
