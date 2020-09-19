@@ -283,6 +283,66 @@ var r = p.exec("The best one!"); // r is ['The', 'T', 'h']
 var r = new RegExp("pattern", "optional flag");
 ```
 
+### 处理异常
+
+```javascript
+try {
+    // some code
+} catch (e) {
+    // process exception
+} finally {
+    // statements always executed
+}
+```
+
+### 抛出异常
+
+throw 抛出的异常会被 catch 捕获。
+
+```javascript
+throw "error message";
+```
+
+### 变量提升
+
+变量声明会被提升到作用域的顶部，但是变量初始化不会。
+
+### 严格模式
+
+在代码顶部打开严格模式：
+
+```javascript
+"use strict" // just a string literal, not a statement
+```
+
+严格模式的限制：
+
+- 不允许使用未声明的变量（用 var 声明）
+- 不允许删除变量和对象
+- 变量不能重名
+- 不允许使用 8 进制
+- 不能使用转义字符
+- 不能对只读属性赋值
+- getter 方法获取的属性不能赋值
+- 不能删除的属性无法被删除
+- 变量名不能是 eval 和 arguments
+- 不能使用 eval() 函数创建的变量
+- this 不能指向全局对象
+- 保留关键字： implements interface let package private protected public static yield
+
+## 表单验证
+
+form 标签的 onsubmit 属性可以调用一个 javascript 函数，如果函数返回 false，则不提交表单。
+
+在 input 标签设置了约束属性之后，使用 DOM 属性 validity 的属性可以验证数据。
+
+## this
+
+- 在对象方法中，this 绑定到对性
+- 在函数中，this 绑定到 全局对象（严格模式下为 undefined）
+- 在全局，绑定到全局对象
+- 在 DOM 事件中绑定到产生事件的元素
+
 
 
 ## HTML 事件
