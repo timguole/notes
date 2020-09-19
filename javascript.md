@@ -136,84 +136,154 @@ function () {
 
 - 内置属性 length 包含字符串的长度
 
-  ```javascript
-  var s = "abc";
-  a[0] = 'b'; // now a is 'bbc'
-  var l = a.length; // 3
-  
-  var s = new String("abc") // typeof s is Object
-  typeof s // Object
-  ```
+```javascript
+var s = "abc";
+a[0] = 'b'; // now a is 'bbc'
+var l = a.length; // 3
 
-  连接字符串操作
+var s = new String("abc") // typeof s is Object
+typeof s // Object
+```
 
-  ```javascript
-  var a = 'abc';
-  var b = 'def';
-  var c = a + b;
-  
-  var d = 1;
-  var e = '2';
-  d + e; // '12'
-  d + a; // 1abc
-  ```
+连接字符串操作
 
-  ### 数学运算符
+```javascript
+var a = 'abc';
+var b = 'def';
+var c = a + b;
 
-  JavaScript 拥有和其他语言类似的运算符（包括赋值运算）。
+var d = 1;
+var e = '2';
+d + e; // '12'
+d + a; // 1abc
+```
 
-  ### 比较运算符
+数学运算符
 
-  JavaScript 拥有和其他语言类似的比较运算符。此外，JavaScript 还有 !== 和 ===（不仅比较值，还要比较类型）
+JavaScript 拥有和其他语言类似的运算符（包括赋值运算）。
 
-  ```javascript
-  var x = 2;
-  x == 2; // true
-  x == '2'; // true
-  x === 2; // true
-  x === '2'; // false
-  ```
+### 比较运算符
 
-  ### 逻辑运算符
+JavaScript 拥有和其他语言类似的比较运算符。此外，JavaScript 还有 !== 和 ===（不仅比较值，还要比较类型）
 
-  JavaScript 拥有和其他语言类似的逻辑运算符。
+```javascript
+var x = 2;
+x == 2; // true
+x == '2'; // true
+x === 2; // true
+x === '2'; // false
+```
 
-  ### 条件运算符
+### 逻辑运算符
 
-  ```javascript
-  condition ? expre : expre;
-  ```
+JavaScript 拥有和其他语言类似的逻辑运算符。
 
-  ### 条件语句
+### 条件运算符
 
-  和 C 语言类似，包括 if 和 switch。
+```javascript
+condition ? expre : expre;
+```
 
-  ### 循环
+### 条件语句
 
-  for 循环的第一种语法和 C 相同。for/in 方式用于遍历对象的属性：
+和 C 语言类似，包括 if 和 switch。
 
-  ```javascript
-  var cat = {name: 'tom', age: 12, gender: 'male'};
-  for (p in cat) { // x is the property name string
-      console.log(x + ': ' + cat[x]);
-  }
-  ```
+### 循环
 
-  while 和 do/while 循环与 C 语言类似。
-  
-  JavaScript 也有 break 和 continue 语句。
-  
-  ### typeof
-  
-  typeof 操作符用于返回值的类型。
-  
-  ### null
-  
-  null 是对象类型，表示没有值。
-  
-  ### undefined
-  
-  是一种类型。没有赋值的变量就是 undefined 类型，值也为 undefined。
+for 循环的第一种语法和 C 相同。for/in 方式用于遍历对象的属性：
+
+```javascript
+var cat = {name: 'tom', age: 12, gender: 'male'};
+for (p in cat) { // x is the property name string
+    console.log(x + ': ' + cat[x]);
+}
+```
+
+while 和 do/while 循环与 C 语言类似。
+
+JavaScript 也有 break 和 continue 语句。
+
+### typeof
+
+typeof 操作符用于返回值的类型。
+
+```javascript
+typeof "John"                 // 返回 string
+typeof 3.14                   // 返回 number
+typeof NaN                    // 返回 number
+typeof false                  // 返回 boolean
+typeof [1,2,3,4]              // 返回 object
+typeof {name:'John', age:34}  // 返回 object
+typeof new Date()             // 返回 object
+typeof function () {}         // 返回 function
+typeof myCar                  // 返回 undefined (如果 myCar 没有声明)
+typeof null                   // 返回 object
+```
+
+对于 object 类型，可以使用 constructor 属性判断具体类型
+
+```javascript
+"John".constructor                 // 返回函数 String()  { [native code] }
+(3.14).constructor                 // 返回函数 Number()  { [native code] }
+false.constructor                  // 返回函数 Boolean() { [native code] }
+[1,2,3,4].constructor              // 返回函数 Array()   { [native code] }
+{name:'John', age:34}.constructor  // 返回函数 Object()  { [native code] }
+new Date().constructor             // 返回函数 Date()    { [native code] }
+function () {}.constructor         // 返回函数 Function(){ [native code] }
+```
+
+### null
+
+null 是对象类型，表示没有值。
+
+### undefined
+
+是一种类型。没有赋值的变量就是 undefined 类型，值也为 undefined。
+
+### 类型转换
+
+```javascript
+String(x) // convert x to string
+number(x) // convert x to number
+```
+
+### 正则表达式
+
+基本语法： /<regex>/<optional flag>
+
+flags: i, g, m
+
+支持正则表达式的字符串方法有：search, replace, match, split。
+
+查找和替换
+
+```javascript
+var s = 'hello, world!';
+var i = s.search(/hello/i); // return index of hello in s.
+vat s1 = s.replace(/hello/i, "Hallo"); // return the new string
+```
+
+测试
+
+```javascript
+var p = /ab/;
+var i = p.test("habor"); // return true, if pattern is found in string.
+```
+
+exec()函数会匹配并返回匹配结果，结果是一个数组，第一个元素为完整的匹配字符串，后面的为捕获的正则表达式中的括号部分。如果不存在匹配，返回null
+
+```javascript
+var p = /(t)(h|b)e/i;
+var r = p.exec("The best one!"); // r is ['The', 'T', 'h']
+```
+
+正则表达式对象
+
+```javascript
+var r = new RegExp("pattern", "optional flag");
+```
+
+
 
 ## HTML 事件
 
