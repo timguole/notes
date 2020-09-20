@@ -116,14 +116,21 @@ var o = new Object;
 
 ### 函数
 
+- JS 不指定形参的类型
+- JS 不检查实参的类型
+- JS 不检查实参的数量（缺少的参数设置为undefined）
+- arguments 是一个包含了参数的数组
+
 ```javascript
 function foobar() {
     // statements
 }
 
-function () {
+var f = function () {
     // statements
 }
+
+var f = (a, b) => { return a + b; };
 ```
 
 ### 字符串
@@ -355,13 +362,33 @@ let 声明的变量不会提升
 
 const 声明的是常量，值不可改变。声明时必须初始化。也是块级作用域。
 
+### void
+
+void 后面的表达式会照常执行，只是 void 不返回任何值。
+
+```javascript
+var a, b;
+a = void(b = 3); // b is 3, a is undefined
+```
+
 ## 表单验证
 
 form 标签的 onsubmit 属性可以调用一个 javascript 函数，如果函数返回 false，则不提交表单。
 
 在 input 标签设置了约束属性之后，使用 DOM 属性 validity 的属性可以验证数据。
 
+## JSON
 
+javascript 内置了`JSON.parse()`和`JSON.stringify()`函数用于将字符串转化为对象或者相反操作。
+
+## 几个全局变量
+
+- window：浏览器窗口；默认 javascript 的全局变量会绑定到 window 上
+- document：当前 HTML 页面
+
+## 函数的绑定
+
+默认，函数会绑定到 window 对象，在函数中 this 代表 window。在元素的各种事件属性中，this 代表元素自己。
 
 ## HTML 事件
 
@@ -374,7 +401,96 @@ form 标签的 onsubmit 属性可以调用一个 javascript 函数，如果函�
 - onmouseout
 - onkeydown
 
-## 函数的绑定
+## DOM
 
-默认，函数会绑定到 window 对象，在函数中 this 代表 window。在元素的各种事件属性中，this 代表元素自己。
+JavaScript 通过 DOM 可以：
 
+- 改变 HTML 元素的内容
+- 改变样式
+- 对事件作出响应
+
+Javascript 查找 HTML 元素的方式：
+
+- 通过 id
+- 通过 name
+- 通过 class
+
+#### 几个关键方法
+
+document.write() 可以改变 HTML 文档的内容。在加载过程中，可以插入内容；在加载完成后会重写整个页面。
+
+```javascript
+<script>
+    document.write('abc');
+</script>
+```
+
+document.getElementById("<ID>").innerHTML
+
+```javascript
+<html>
+<body>
+<p id="p1">Hello World!</p>
+<script>
+document.getElementById("p1").innerHTML="JavaScript";
+</script>
+</body>
+</html>
+```
+
+document.getElementById("id").ATTR
+
+```javascript
+<!DOCTYPE html>
+<html>
+<body>
+<img id="image" src="smiley.gif">
+<script>
+document.getElementById("image").src="landscape.jpg";
+</script>
+</body>
+</html>
+```
+
+document.getElementById(*id*).style.*property*
+
+```javascript
+<!DOCTYPE html>
+<html>
+<body>
+<h1 id="id1">我的标题 1</h1>
+<button type="button"
+onclick="document.getElementById('id1').style.color='red'">
+点我!</button>
+</body>
+</html>
+```
+
+Event
+
+```javascript
+<!DOCTYPE html>
+<html>
+<body>
+<h1 onclick="this.innerHTML='Ooops!'">点击文本!</h1>
+</body>
+</html>
+```
+
+```javascript
+<!DOCTYPE html>
+<html>
+<body>
+<button id="myBtn">Click here</button>
+<script>
+document.getElementById("myBtn").onclick=function(){displayDate()};
+function displayDate(){
+	document.getElementById("demo").innerHTML=Date();
+}
+</script>
+<p id="demo"></p>
+</body>
+</html>
+```
+
+body 标签的 onload 事件
