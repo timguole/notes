@@ -330,18 +330,36 @@ throw "error message";
 - this 不能指向全局对象
 - 保留关键字： implements interface let package private protected public static yield
 
-## 表单验证
-
-form 标签的 onsubmit 属性可以调用一个 javascript 函数，如果函数返回 false，则不提交表单。
-
-在 input 标签设置了约束属性之后，使用 DOM 属性 validity 的属性可以验证数据。
-
-## this
+### this
 
 - 在对象方法中，this 绑定到对性
 - 在函数中，this 绑定到 全局对象（严格模式下为 undefined）
 - 在全局，绑定到全局对象
 - 在 DOM 事件中绑定到产生事件的元素
+
+### let
+
+let 关键字让 javascript 有了块作用域的概念。
+
+在代码快内，let 关键字声明的变量作用域为代码块内。代码块就是花括号包围的一段代码，包括 for 循环，if 语句等。
+
+在全局作用域内，let 声明的变量不属于 window；与此相反，var 声明的变量属于 window。
+
+在函数体内，let 和 var 类似。
+
+在同一个作用域内，var 和 let 互相不能重置已经声明的变量。
+
+let 声明的变量不会提升
+
+### const
+
+const 声明的是常量，值不可改变。声明时必须初始化。也是块级作用域。
+
+## 表单验证
+
+form 标签的 onsubmit 属性可以调用一个 javascript 函数，如果函数返回 false，则不提交表单。
+
+在 input 标签设置了约束属性之后，使用 DOM 属性 validity 的属性可以验证数据。
 
 
 
