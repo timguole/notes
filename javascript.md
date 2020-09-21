@@ -85,6 +85,30 @@ var a = ['a', 'b'];
 
 #### 对象
 
+构造对象有几种方式。
+
+方式一
+
+```javascript
+var o = new Object();
+o.property1 = 'value1';
+o.property2 = 'value2';
+```
+
+方式二
+
+```javascript
+function bigCat(name, gender, age) {
+    this.name = name;
+    this.gender = gender;
+    this.age = age;
+}
+
+var o = new bigCat('tiger', 'male', 12);
+```
+
+方式三
+
 ```javascript
 var o = { name: "tom",
          gender: "male",
@@ -416,9 +440,11 @@ Javascript 查找 HTML 元素的方式：
 - 通过 name
 - 通过 class
 
-#### 几个关键方法
+### 操作元素
 
-document.write() 可以改变 HTML 文档的内容。在加载过程中，可以插入内容；在加载完成后会重写整个页面。
+#### document.write() 
+
+可以改变 HTML 文档的内容。在加载过程中，可以插入内容；在加载完成后会重写整个页面。
 
 ```javascript
 <script>
@@ -426,7 +452,7 @@ document.write() 可以改变 HTML 文档的内容。在加载过程中，可以
 </script>
 ```
 
-document.getElementById("<ID>").innerHTML
+#### document.getElementById("<ID>").innerHTML
 
 ```javascript
 <html>
@@ -439,7 +465,7 @@ document.getElementById("p1").innerHTML="JavaScript";
 </html>
 ```
 
-document.getElementById("id").ATTR
+#### document.getElementById("id").ATTR
 
 ```javascript
 <!DOCTYPE html>
@@ -453,7 +479,7 @@ document.getElementById("image").src="landscape.jpg";
 </html>
 ```
 
-document.getElementById(*id*).style.*property*
+#### document.getElementById(*id*).style.*property*
 
 ```javascript
 <!DOCTYPE html>
@@ -467,7 +493,7 @@ onclick="document.getElementById('id1').style.color='red'">
 </html>
 ```
 
-Event
+#### Event
 
 ```javascript
 <!DOCTYPE html>
@@ -500,3 +526,25 @@ function displayDate(){
 - useCapture 参数是可选的，默认为 false；即先是调用内部元素的处理函数，再是外部元素
 
 #### removeEventlistener("eventname", callbackname)
+
+### 增添、删除、替换元素
+
+主要的方法：
+
+- document.createElement("tag-name")
+- document.createTextNode("TEXT");
+- ELEMENT.appendChild(element-object);
+- ELEMENT.insertBefore(parent, child);
+- parent.removeChild(child);
+- parent.replaceChild(new, old);
+
+### HTML collection 和 NodeList
+
+getElementByTagName("tagname") 返回页面所有 tagname 元素的集合。length 属性包含元素的数量。
+
+querySelectorAll("tagname") 返回 NodelList 对象；该对象也有 length 属性。
+
+- 两种对象都可以通过索引访问其中的值
+- Nodelist 是元素节点的快照。之后的增删都不影响 NodeList 对象
+- Collection 是动态绑定的，增删都会反映到 Collection 对象。
+
