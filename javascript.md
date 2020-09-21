@@ -385,6 +385,7 @@ javascript 内置了`JSON.parse()`和`JSON.stringify()`函数用于将字符串�
 
 - window：浏览器窗口；默认 javascript 的全局变量会绑定到 window 上
 - document：当前 HTML 页面
+- navigator
 
 ## 函数的绑定
 
@@ -493,4 +494,9 @@ function displayDate(){
 </html>
 ```
 
-body 标签的 onload 事件
+#### addEventListener(“eventname”, callback, useCapture)
+
+- 可以向同一个元素的同一个事件添加多个回调
+- useCapture 参数是可选的，默认为 false；即先是调用内部元素的处理函数，再是外部元素
+
+#### removeEventlistener("eventname", callbackname)
