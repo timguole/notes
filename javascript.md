@@ -95,7 +95,9 @@ o.property1 = 'value1';
 o.property2 = 'value2';
 ```
 
-方式二
+方式二（对象构造器）
+
+> 不能在函数体外直接向对象构造器添加新属性。需要通过prototype
 
 ```javascript
 function bigCat(name, gender, age) {
@@ -126,6 +128,15 @@ o["name"]
 // access object method without () will return the definition of that method
 o.run(); // return hahaha
 o.run; // return the method definition: function() {return "hahaha"; }
+```
+
+##### prototype
+
+通过 prototype 属性可以向对象的构造器添加新的属性和方法
+
+```javascript
+bigCat.prototype.eat = function (food) { console.log('eat' + food); }
+bigCat.prototype.color = 'yellow';
 ```
 
 ### 声明时确定变量类型
