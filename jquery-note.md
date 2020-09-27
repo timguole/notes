@@ -72,3 +72,16 @@ $(SELECTOR).EVENT(function() {
 - 键盘事件：keypress keydown keyup
 - 表单事件：submit change focus blur
 - 文档窗口事件：load resize scroll unload
+
+## 特效
+
+#### show/hide/toggle
+
+```javascript
+// speed can be slow, fast or millinseconds
+// If there are three arguments, the second is a sring describing how to animate (linear/swing)
+$(SELECTOR).hide(SPEED, CALLBACK);
+$(SELECTOR).show(SPEED, CALLBACK);
+$(SELECTOR).toggle();
+```
+
