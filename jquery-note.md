@@ -85,3 +85,61 @@ $(SELECTOR).show(SPEED, CALLBACK);
 $(SELECTOR).toggle();
 ```
 
+## 操作HTML
+
+几个重要方法：
+
+#### text() 和 html()
+
+text() 设置或者返回元素的文本内容；html() 返回或者设置元素内的内容，包括嵌套在其中的标签。假如有：
+
+```html
+<p id="preword">a<b>b</b>b>c</p>p>
+```
+
+```javascript
+$("#preword").text(); // return abc
+$("#preword").html(); // return a <b>b</b> c
+```
+
+```javascript
+// argument is string
+$("#preword").text("new text");
+
+// argument is a callback function
+// i: index of this element in the selected element list
+// o: old text
+$("preword").text(function(i, o) {
+    // code
+});
+```
+
+> html() 拥有相似的调用方式
+
+#### val()
+
+返回表单字段的值
+
+```javascript
+$("#name").val();
+```
+
+> 当设置value时， val()和text()有相似的调用方式
+
+#### attr() 和 prop()
+
+attr()可能返回undefined；prop()可能放回空字符串
+
+```javascript
+$("#home").attr("href"); // return value of href
+$("#name").attr("href", "www.foo.bar"); // set one attribution
+$("#name").attr({"href": "www.foo.bar", "target": "_self"}); // set multiple values
+```
+
+#### append/prepend
+
+在选中元素的内部最后/开头增加元素
+
+#### after/before
+
+在选中元素之后/之前添加元素
