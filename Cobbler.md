@@ -56,7 +56,11 @@ tftp目录中包含pxelinux.0或者其它bootloader。一般在同一级目录�
  /tftpboot/pxelinux.cfg/default
 ```
 
+## Cobbler 基本术语
 
+- distro：对应一个linux发行版镜像；该对象包含发行版的版本，cpu架构等信息；一个distro可以被多个profile关联
+- profile：与一个distro关联，并且包含更多安装配置信息；一个profile可以被多个system关联；profile可以用来针对特定的硬件型号或者机器的用途做定制。
+- system：代表一个具体的主机，与一个profile关联，包含更详细的配置信息，例如，mac地址，ip地址，主机名等
 
 ## Cobbler安装与基本配置
 
@@ -67,8 +71,13 @@ tftp目录中包含pxelinux.0或者其它bootloader。一般在同一级目录�
 关闭防火墙（或者开放相应的端口）
 
 ```shell
-systemctl disable firewalld.service
-systemctl stop firewalld.service
+firewall-cmd --add-port=25151/tcp --permanent 
+firewall-cmd --add-service=dhcp --permanent 
+firewall-cmd --add-service=http --permanent 
+firewall-cmd --add-service=https --permanent 
+firewall-cmd --add-service=tftp --permanent 
+firewall-cmd --add-service=dhcp --permanent
+firewall-cmd --reload
 ```
 
 关闭selinux（/etc/selinux/config）
@@ -179,3 +188,14 @@ cobbler profile list
 cobbler distro report --name=centos7-x86_64
 ```
 
+### 创建一个system
+
+```shell
+cobbler system add --name=testvm --profile=centos7-x86_64
+```
+
+可以为一个system设置nic，ip，mac，hostname，gateway，netmask等信息。设置mac后，cobbler将会在bootloader的配置文件目录中为该system生成名为01-MAC的配置文件。机器从pxe启动时，将会获取此文件，而不再显示cobbler的profile菜单。
+
+### 自动安装
+
+可以为profile或者system指定一个自定义的ks文件，而不使用默认的ks文件。ks模板中的$SNIPPET将会被实际的snippet文件替换掉，生成最终可用的ks文件（不包含模板标签等信息）。
