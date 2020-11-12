@@ -199,3 +199,14 @@ cobbler system add --name=testvm --profile=centos7-x86_64
 ### 自动安装
 
 可以为profile或者system指定一个自定义的ks文件，而不使用默认的ks文件。ks模板中的$SNIPPET将会被实际的snippet文件替换掉，生成最终可用的ks文件（不包含模板标签等信息）。
+
+### 遇到的问题
+
+使用kvm+ipxe测试时，出现类似以下的错误消息：
+
+```shell
+dracut-initqueue: /sbin/dmsquash-live-root no space left on /dev/loop0
+... /dev/root does not exist...
+```
+
+pxe启动的过程中，bootloader根据配置文件加载内核与initrd之后，内核启动并把initrd挂载为rootfs。接下来会使用curl下载squashfs.img。在centos7中这个img大约有500 MB，机器内存如果小于1.5 GB，则会出现内存耗尽，出现上面的消息。squashfs无法下载和挂载，导致安装失败，进入紧急模式。
