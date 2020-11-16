@@ -71,7 +71,6 @@ tftp目录中包含pxelinux.0或者其它bootloader。一般在同一级目录�
 关闭防火墙（或者开放相应的端口）
 
 ```shell
-firewall-cmd --add-port=25151/tcp --permanent 
 firewall-cmd --add-service=dhcp --permanent 
 firewall-cmd --add-service=http --permanent 
 firewall-cmd --add-service=https --permanent 
