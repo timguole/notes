@@ -210,3 +210,11 @@ dracut-initqueue: /sbin/dmsquash-live-root no space left on /dev/loop0
 ```
 
 pxe启动的过程中，bootloader根据配置文件加载内核与initrd之后，内核启动并把initrd挂载为rootfs。接下来会使用curl下载squashfs.img。在centos7中这个img大约有500 MB，机器内存如果小于1.5 GB，则会出现内存耗尽，出现上面的消息。squashfs无法下载和挂载，导致安装失败，进入紧急模式。
+
+### PXE自动安装操作系统故障检查与排除
+
+- 确认机器启动方式：legacy或者uefi
+- 确认网卡打开pxe功能
+- 从机器控制台查看发送dhcp请求的网卡mac是否与配置一致
+- 从 /var/log/message查看dhcp和tftpd是否收到请求
+
