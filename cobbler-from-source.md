@@ -1,6 +1,6 @@
 # Cobbler 源码安装
 ## 基本信息
-安装过程是在CentOS 7 上进行的。Cobbler 版本为3.2.0。
+安装过程是在 CentOS 7 上进行的。Cobbler 版本为 3.2.0 。Cobbler 的文档不太完善。源代码包中的dockerfile 包含更准确的信息，可以用于准备构建环境或者时运行时依赖。
 ## 安装 额外软件包 源
 安装 epel 和 ius
 ```shell
@@ -22,7 +22,6 @@ yum install -y          \
     dnf-plugins-core        \
     epel-rpm-macros         \
     openssl                 \
-    mod_ssl                 \
     python-sphinx           \
     python36-coverage       \
     python36-devel          \
@@ -36,6 +35,12 @@ yum install -y          \
     python36-sphinx         \
     rpm-build               \
     which
+```
+
+如果需要安装cobbler web，需要安装 mod_ssl
+
+```shell
+yum install mod_ssl
 ```
 
 安装运行时依赖的软件包
@@ -71,7 +76,7 @@ yum install -y          \
 
 ```
 
-## 构建并安装cobbler
+## 构建并安装 cobbler
 
 > make rpms 生成的安装包在rpm-build目录下
 
@@ -79,7 +84,15 @@ yum install -y          \
 tar -zxf cobbler-3.2.0.tar.gz 
 cd cobbler-3.2.0/
 make rpms
-yum install rpm-build/*.rpm
+cd rpm-build
+yum localinstall cobbler-3.2.0-1.el7.noarch.rpm
 ```
 
-> 注意：cobbler-web需要额外的https配置
+如果需要安装 cobbler web，需要安装 cobbler-web 。
+
+```shell
+yum localinstall cobbler-web-3.2.0-1.el7.noarch.rpm
+```
+
+> 注意：cobbler-web 需要额外的 https 配置
+
