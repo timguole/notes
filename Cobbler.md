@@ -91,7 +91,7 @@ SELINUX=disabled
 ```shell
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum localinstall epel-release-latest-7.noarch.rpm 
-yum makecache 
+yum makecache fast
 ```
 
 ### 安装
