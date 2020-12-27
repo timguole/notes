@@ -62,12 +62,16 @@ gpg -d -o file file.enc
 
 #### 签名与验证
 
+签名
+
 ```shell
 gpg -s file
 
 # dettached sign. a file.sig is created
 gpg -b file
 ```
+
+验证
 
 ```shell
 # for dettached sign
@@ -77,3 +81,12 @@ gpg --verify file.sig file
 gpg --verify file.gpg
 ```
 
+> 验证可能会产生一个警告：
+>
+> WARNING: This key is not certified with a trusted signature!
+>
+> 此时，如果信任公钥，可以使用自己的密钥对其进行签名
+>
+> gpg --sign-key UID
+>
+> 使用签名之后的公钥去验证其它签名就不会产生警告了
