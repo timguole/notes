@@ -90,3 +90,12 @@ gpg --verify file.gpg
 > gpg --sign-key UID
 >
 > 使用签名之后的公钥去验证其它签名就不会产生警告了
+
+#### 杂项
+
+如果gpg生成密钥时间很久，或者提示没有足够的随机数据，需要使用rng工具
+
+```shell
+sudo rngd -r /dev/urandom
+```
+
