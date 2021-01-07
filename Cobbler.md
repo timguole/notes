@@ -4,13 +4,13 @@
 
 pxe从网络引导，安装Linux的基本步骤如下：
 
-1. 机器加电后从支持pxe的网卡启动，向dhcp服务器申请IP和pxe相关信息
-2. dhcp服务根据subnent或者host mac为机器分配ip地址、bootloader文件路径
+1. 机器加电后从支持pxe的网卡向dhcp服务器申请IP和pxe相关信息
+2. dhcp服务根据subnent或者host mac为机器分配ip地址、tftp服务地址、bootloader文件路径
 3. 机器根据bootloader文件的路径向tftp服务获取bootloader文件和相关的配置文件
-4. 机器根据bootloader配置文件中指示的内核与initrd路径（一般是url）获取内核
+4. 机器根据bootloader配置文件中指示的内核与initrd路径从 tftp 获取内核与initrd
 5. bootloader启动内核
 6. 内核使用initrd启动完成后，运行系统安装程序。
-7. 安装程序可以根据ks或者pressed文件自动完成系统的安装和配置过程
+7. 安装程序可以根据bootloader配置文件中的 ks 或者 pressed 文件自动完成系统的安装和配置过程
 
 #### 涉及到的服务
 
@@ -18,22 +18,81 @@ dhcpd，tftpd，httpd
 
 ### pxe启动步骤的一些细节说明
 
-dhcp服务会根据机器提供的 option arch决定为机器提供哪个bootloader；机器的arch可能是以下情况之一：
+bootloader路径和文件名由dhcp配置中的filename选项提供；tftp服务的名字由dhcp配置中的next-server提供。.dhcp服务会根据机器提供的 option arch决定为机器提供哪个bootloader；机器的arch可能是以下情况之一：
 
-- 06：x86 32-bit efi
-- 07：amd64 64-bit efi
-- legacy模式启动
-
-bootloader路径由dhcp配置中的filename选项提供。
-
-tftp目录中包含pxelinux.0或者其它bootloader。一般在同一级目录下还存在这与bootloader对应的配置文件目录。可能的目录结构是：
-
-```shell
-/tftpboot/pxelinux.0
-/tftpboot/pxelinux.cfg/
+```nginx
+     class "pxeclients" {
+          match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
+          # Legacy
+          if option system-arch = 00:00 {
+              filename "grub/grub.0";
+          }
+          # UEFI-32-1
+          if option system-arch = 00:06 {
+              filename "unsupported";
+          }
+          # UEFI-32-2
+          if option system-arch = 00:02 {
+              filename "unsupported";
+          }
+          # UEFI-64-1
+          if option system-arch = 00:07 {
+              filename "grub/grubx64.efi";
+          }
+          # UEFI-64-2
+          if option system-arch = 00:08 {
+              filename "grub/grubx64.efi";
+          }
+          # UEFI-64-3
+          if option system-arch = 00:09 {
+              filename "grub/grubx64.efi";
+          }
+          # armv7   (aka arm 32 bit)
+          if option system-arch = 00:0a {
+              filename "grub/armv7.efi";
+          }
+          # aarch64 (aka arm 64 bit)
+          if option system-arch = 00:0b {
+              filename "grub/grubaa64.efi";
+          }
+          # RiskV 32 bit
+          if option system-arch = 00:25 {
+              #ToDo petitboot loader
+              filename "unsupported";
+          }
+          #RiskV 32 bit
+          if option system-arch = 00:27 {
+              #ToDo petitboot loader
+              filename "unsupported";
+          }
+          if option system-arch = 00:0e {
+              filename "grub/grub.ppc64le";
+          } else {
+              filename "grub/grub.0";
+          }
+     }
 ```
 
-机器向tftp请求bootloader配置文件时，文件名可能是：
+
+
+#### 传统模式
+
+tftp的存储目录一般是 /var/lib/tftpboot。目录中包含pxelinux.0 bootloader，同一级目录下还存在一个配置文件目录。目录结构大致如下：
+
+```shell
+/var/lib/tftpboot/pxelinux.0
+/var/lib/tftpboot/pxelinux.cfg/
+/var/lib/tftpboot/pxelinux.cfg/01-MAC1
+/var/lib/tftpboot/pxelinux.cfg/01-MAC2
+/var/lib/tftpboot/pxelinux.cfg/default
+/var/lib/tftpboot/images/
+/var/lib/tftpboot/images/DISTRO1/vmlinuz
+/var/lib/tftpboot/images/DISTRO1/initrd.img
+/var/lib/tftpboot/images/DISTRO2/vmlinuz
+/var/lib/tftpboot/images/DISTRO2/initrd.img
+```
+
+机器向tftp请求bootloader配置文件时，可能会依次尝试以下的名字：
 
 - 自己的uudi
 - ip地址的hex表示（包括完整IP或者部分前缀）
@@ -43,18 +102,33 @@ tftp目录中包含pxelinux.0或者其它bootloader。一般在同一级目录�
 以机器ip为192.168.2.91，MAC为88-99-aa-bb-cc-dd为例，机器向tftp请求bootloader配置文件时可能的文件名如下：
 
 ```shell
-/tftpboot/pxelinux.cfg/b8945908-d6a6-41a9-611d-74a6ab80b83d
- /tftpboot/pxelinux.cfg/01-88-99-aa-bb-cc-dd
- /tftpboot/pxelinux.cfg/C0A8025B
- /tftpboot/pxelinux.cfg/C0A8025
- /tftpboot/pxelinux.cfg/C0A802
- /tftpboot/pxelinux.cfg/C0A80
- /tftpboot/pxelinux.cfg/C0A8
- /tftpboot/pxelinux.cfg/C0A
- /tftpboot/pxelinux.cfg/C0
- /tftpboot/pxelinux.cfg/C
- /tftpboot/pxelinux.cfg/default
+/pxelinux.cfg/b8945908-d6a6-41a9-611d-74a6ab80b83d
+/pxelinux.cfg/01-88-99-aa-bb-cc-dd
+/pxelinux.cfg/C0A8025B
+/pxelinux.cfg/C0A8025
+/pxelinux.cfg/C0A802
+/pxelinux.cfg/C0A80
+/pxelinux.cfg/C0A8
+/pxelinux.cfg/C0A
+/pxelinux.cfg/C0
+/pxelinux.cfg/C
+/pxelinux.cfg/default
 ```
+
+#### UEFI模式
+
+UEFI模式与传统模式类似，只是bootloader程序和配置文件名有差异。以grub为例，一般请求的顺序是：
+
+```shell
+# Fisrt, the bootloader program. If not exists, PXE fails.
+/grub/shimx64.efi # RHEL family needs this first stage file
+/grub/grubx64.efi # this name depends on CPU type. grubaa64.efi for ARM64
+
+# Then bootloader config file.
+/grub/grub.cfg-01-MAC
+```
+
+
 
 ## Cobbler 基本术语
 
