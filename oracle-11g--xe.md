@@ -63,6 +63,37 @@ sqlplus system
 sqlplus systtem@hostname
 ```
 
+#### 安装客户端
+
+如果其它机器需要连接数据库服务，那么需要在那些机器上安装单独的客户端。
+
+首先，根据需要从官网下载客户端安装包。sqlplus命令行工具需要的安装包如下：
+
+- oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm
+- oracle-instantclient11.2-sqlplus-11.2.0.4.0-1.x86_64.rpm
+
+安装软件包
+
+```shell
+yum localinstall oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm \
+		oracle-instantclient11.2-sqlplus-11.2.0.4.0-1.x86_64.rpm
+```
+
+设置环境变量（在.bashrc中追加以下内容）
+
+```shell
+export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib/;
+export PATH=/usr/lib/oracle/11.2/client64/bin/:$PATH;
+```
+
+测试远程连接数据库
+
+> 提示：确保数据库服务所在机器的防火墙打开了 1521/tcp 端口
+
+```shell
+sqlplus system/PASSWORD@DB-ADDRESS
+```
+
 
 
 ## 基本操作
