@@ -124,6 +124,38 @@ SQL> startup # oracle will try to recover when starting up
 SQL> shutdown immediate
 ```
 
+#### 连接数据库
+
+本地连接
+
+```shell
+sqlplus name/password
+sqlplus name
+sqlplus / as sysdba
+```
+
+远程连接
+
+```shell
+sqlplus name[/password]@hostname[:port][/XE]
+```
+
+> 如果使用 `/nolog` 选项，那么 sqlplus 启动但不连接数据库，直到使用 `connect` 命令。
+
+#### 设置环境变量
+
+本地连接
+
+```shell
+source /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh
+```
+
+远程连接
+
+```shell
+source /usr/lib/oracle/xe/app/oracle/product/11.2.0/client/bin/oracle_env.sh
+```
+
 
 
 创建用户并授权
