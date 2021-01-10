@@ -187,7 +187,162 @@ source /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh
 source /usr/lib/oracle/xe/app/oracle/product/11.2.0/client/bin/oracle_env.sh
 ```
 
+#### 管理网络连接
 
+数据库服务和远程客户端均包含 oracle net 组件用于建立网络连接。数据库服务端负责网络连接管理的是 listener 进程，负责监听和接收来自客户端的连接请求。Listener 默认监听的端口为1521和8080。
+
+需要 Listener 的连接类型：
+
+- 远程连接数据库服务
+- 远程连接http服务
+- 本地连接http服务
+
+查看、停止、启动 listener
+
+```shell
+lsnrctl status
+lsnrctl stop
+lsnrctl start
+```
+
+##### 修改 listener 的数据库服务端口号
+
+首先，停止 listener
+
+```shell
+lsnrctl stop
+```
+
+其次，编辑listenenr 配置文件（/u01/app/oracle/product/11.2.0/xe/network/admin/listener.ora）。找到以下内容，将1521修改为自己需要的端口号。
+
+```shell
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC_FOR_XE))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = oracle11gxe)(PORT = 1521))
+
+```
+
+启动 listenenr
+
+```shell
+lsnrctl start
+```
+
+使用sqlplus连接到数据库服务，并执行以下命令：
+
+> 注意：使用真实的主机名和端口号替换命令中的占位
+
+```SQL
+ALTER SYSTEM SET LOCAL_LISTENER = "(ADDRESS=(PROTOCOL=TCP)(HOST=<your hostname>)(PORT=<newport>))";
+
+ALTER SYSTEM REGISTER;
+```
+
+最后，检查listener 状态。
+
+##### 修改listener的http端口号
+
+首先，确认listener正在运行。使用system用户连接到数据库，并执行以下命令：
+
+> 注意：使用新端口号替换命令中的nnnn
+
+```sql
+EXEC DBMS_XDB.SETHTTPPORT(nnnn);
+```
+
+退出sqlplus，并检查listener状态
+
+##### 允许铜鼓http协议远程访问数据库
+
+使用system用户连接数据库并执行命令：
+
+```sql
+EXEC DBMS_XDB.SETLISTENERLOCALACCESS(FALSE);
+```
+
+#### 内存管理
+
+基本概念
+
+- instance：一个实例由一组后台进程和相关的内存构成（？）
+- SGA：由buffer、cache pool、redo log buffer等组成
+- PGA：
+
+数据库服务会为每个连接数据库的客户端创建一个进程。每个进程有自己单独的pga，并共享sga。
+
+##### 修改SGA 和 PGA
+
+> 不要轻易修改这些参数。
+
+```sql
+ALTER SYSTEM SET pga_aggregate_target = 140 M; # use a real memory size
+ALTER SYSTEM SET sga_target = 472 M; # use a real memory size
+```
+
+重启数据库服务，以使配置生效。
+
+#### 存储管理
+
+oracle数据库由逻辑上的tablespace和物理上的datafile组成。一个tablespace由一个或者多个datafile组成。除了存储用户数据的文件，还有用于控制和撤销操作的文件。
+
+XE 默认的tablespace有：
+
+- SYSTEM（SYS用户的默认表空间）
+- SYSAUX
+- TEMP
+- UNDO
+- USER（除了SYS用户外，其它用户的默认表空间）
+
+#### Flash Recovery Area 相关操作
+
+查看 Flash Recovery Area 的空间大小和使用率：
+
+```sql
+SELECT
+NAME,
+TO_CHAR(SPACE_LIMIT, '999,999,999,999') AS SPACE_LIMIT,
+TO_CHAR(SPACE_LIMIT - SPACE_USED + SPACE_RECLAIMABLE, '999,999,999,999')
+AS SPACE_AVAILABLE,
+ROUND((SPACE_USED - SPACE_RECLAIMABLE)/SPACE_LIMIT * 100, 1)
+AS PERCENT_FULL
+FROM V$RECOVERY_FILE_DEST;
+```
+
+##### 设置 Flash Recovery Area位置
+
+> 以 SYSDBA身份连接数据库
+>
+> new_path 所指向的目录必须已经存在。
+>
+> @表示开始执行一个脚本
+>
+> ？代表oracle home
+
+```sql
+ALTER SYSTEM SET DB_RECOVERY_FILE_DEST = 'new_path';
+
+# Run a script to move the logs to new location
+# Refer to 2-day dba doc for the content of movelogs.sql
+@?/sqlplus/admin/movelogs
+```
+
+> **注意：不要手动删除旧的log文件**
+
+##### 修改 Flash Recovery Area 大小
+
+> 使用SYSDBA身份连接数据库
+>
+> new_size 格式为 nK，nM，nG
+
+```sql
+ALTER SYSTEM SET DB_RECOVERY_FILE_DEST_SIZE = new_size;
+```
+
+
+
+#### 管理用户
 
 创建用户并授权
 
