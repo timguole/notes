@@ -58,3 +58,11 @@ s/(foo)bar/\1baz/
 2p # print the 2nd line. With option -n, only the 2nd line is printed out.
 ```
 
+### 使用不同的分隔符
+
+```shell
+# use | as delimiter
+sed '\|^foo|abar'
+sed '\|^foo|,\|^bar|d'
+```
+
