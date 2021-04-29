@@ -37,7 +37,7 @@ set xdata time
 set format x '%H:%M'
 set timefmt '%Y%m%d%H%M'
 set yrange [0:1000]
-plot file.data using 1:2 with boxes
+plot 'file.data' using 1:2 with boxes
 ```
 
 #### Plot with two Y-axes
@@ -73,6 +73,6 @@ set y2tics 100,1
 set y2range [100:128]
 set y2label 'Y2 Label'
 
-plot file.data using 1:2 with line axis x1y1, file.data using 1:3 with line axis x1y2
+plot 'file.data' using 1:2 with line axis x1y1, file.data using 1:3 with line axis x1y2
 ```
 
