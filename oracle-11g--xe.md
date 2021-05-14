@@ -362,3 +362,20 @@ alter user hr account unlock;
 alter user hr identified by USER-PASSWORD；
 ```
 
+## 常见问题
+
+#### ORA-00054
+
+登录oracle,查找锁表的会话
+
+```sql
+# fin the sessions
+select session_id from v$locked_object;
+
+# show details for session XXX
+SELECT sid, serial#, username, osuser FROM v$session where sid = XXX;
+
+# kill sesion XXX, YYY is the serial number
+ALTER SYSTEM KILL SESSION 'XXX,YYY';
+```
+
