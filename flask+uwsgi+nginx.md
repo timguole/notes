@@ -7,7 +7,7 @@ The steps are taken on a Ubuntu 20.04.
 ```shell
 sudo apt update
 sudo apt install nginx-full \
-		python3-flask python3-flask flask-restful \
+		python3-flask python3-flask-restful \
 		uwsgi uwsgi-plugin-python3
 ```
 
