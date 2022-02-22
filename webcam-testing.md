@@ -29,9 +29,15 @@
 When the webcam output is in MJPEG format
 
 ```shell
-# Live view
+# Live view, format: mjpeg
 gst-launch-1.0 v4l2src device=/dev/video2 ! image/jpeg,width=2560,height=1440 ! jpegdec ! xvimagesink
 
-# Save output into a image file
+# Live view, format: YUYV
+gst-launch-1.0 v4l2src device=/dev/video0 ! image/jpeg,width=1280,height=720 ! xvimagesink
+
+# Save output into an image file; data format: mjpeg
 gst-launch-1.0 v4l2src device=/dev/video2 ! image/jpeg,width=2560,height=1440 ! jpegparse ! filesink location=./foo.jpg
+
+# Save output into an image file; data format: YUYV
+gst-launch-1.0 v4l2src device=/dev/video0 ! image/jpeg,width=1280,height=720 ! filesink location=./foo.jpg
 ```
