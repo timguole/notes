@@ -78,14 +78,14 @@ make install
 
 #### 配置manager
 
-应用配置文件：/etc/mha-manager/app1.cnf 
+应用配置文件：/etc/mha-manager/app1.cnf（以实际安装路径为准）
 
 > 请根据实际slave数量，添加相应的`[server X]`
 
 ```ini
 [server default]
 manager_workdir=<path-to-workdir>
-manager_log=<path-to-log>
+manager_log=<path-to-workdir>/manager.log
 
 [server1]
 hostname=<mysql-master-ip>
@@ -99,7 +99,7 @@ candidate_master=1
 hostname=<mysql-slave3-ip>
 candidate_master=1
 ```
-mha manager配置文件：/etc/mha-manager/mha_default.cnf 
+mha manager配置文件：/etc/mha-manager/mha_default.cnf（以实际安装路径为准）
 
 ```ini
 [server default]
@@ -138,7 +138,6 @@ sub stop_vip() {
 	return 0  unless  ($ssh_user);
 	`ssh $ssh_user\@$orig_master_host \" $ssh_stop_vip \"`;
 }
-	
 ````
 
 #### 检查mha配置
@@ -146,13 +145,13 @@ sub stop_vip() {
 如果输出中包含错误信息，请解决所有存在的问题。
 
 ```shell
-masterha_check_repl --global_conf=/etc/mha-manager/masterha_default.cnf --conf=/etc/mha-manager/app1.cnf
+masterha_check_repl --global_conf=/path/to/mha_default.cnf --conf=/path/to/mha-manager/app1.cnf
 ```
 
 #### 启动manager进程
 
 ```shell
-nohup masterha_manager --global_conf=/etc/mha-manager/masterha_default.cnf --conf=/etc/mha-manager/app1.cnf &
+nohup masterha_manager --global_conf=/path/to/mha_default.cnf --conf=/path/to/mha-manager/app1.cnf &
 ```
 
 #### 检查manger状态
@@ -160,6 +159,6 @@ nohup masterha_manager --global_conf=/etc/mha-manager/masterha_default.cnf --con
 正常情况下，输出中包含正在运行的app，pid，master ip信息。
 
 ```shell
-masterha_check_status --global_conf=/etc/mha-manager/masterha_default.cnf --conf=/etc/mha-manager/app1.cnf
+masterha_check_status --global_conf=/path/to/mha_default.cnf --conf=/path/to/mha-manager/app1.cnf
 ```
 
