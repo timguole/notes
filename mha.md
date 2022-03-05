@@ -22,7 +22,7 @@ yum makecache
 
 #### 安装依赖包和工具
 ```shell
-yum install -y
+yum install -y \
 	unzip \
 	perl-Config-Tiny \
 	perl-Log-Dispatch \
@@ -139,6 +139,13 @@ sub stop_vip() {
 	`ssh $ssh_user\@$orig_master_host \" $ssh_stop_vip \"`;
 }
 ````
+
+#### 设置VIP
+
+```shell
+# run on master node
+ip addr add VIP dev NIC
+```
 
 #### 检查mha配置
 

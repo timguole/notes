@@ -31,10 +31,9 @@ passwd mysql
 
 ```shell
 # mysql conf file and data file
-mkdir /data2/mysql
-mkdir /data2/mysql/{etc,data,tmp,log,sock}
-chown mysql:mysql -R /data2/mysql
-chmod 750 -R /data2/mysql
+mkdir -p /opt/mysql/{etc,data,tmp,log,run,binlog}
+chown mysql:mysql -R /opt/mysql
+chmod 750 -R /opt/mysql
 
 # mysql program files
 mkdir /usr/local/mysql
@@ -65,9 +64,15 @@ echo 'export PATH=$PATH:/usr/local/mysql/bin' >> .bashrc;
 ```ini
 [mysqld]
 basedir=/usr/local/mysql
-datadir=/data2/mysql/data
+datadir=/opt/mysql/data
+
+## with these options, mysqld will not print the temp password for root
 #lower_case_table_names=1
-# TODO: add pid file, socket file, tmp file, binlog file dir options
+#pid-file=/opt/mysql/run/mysql.pid
+#tmpdir=/opt/mysql/tmp
+#socket=/opt/mysql/run/mysql.socket
+#log-bin=/opt/mysql/binlog/mysql-binlog
+#log-error=/opt/mysql/log/error.log
 ```
 
 #### 初始化MySQL数据目录
@@ -78,7 +83,7 @@ datadir=/data2/mysql/data
 
 ```shell
 cd /usr/local/mysql
-bin/mysqld --defaults-file=/data2/mysql/etc/my.cnf --initialize --user=mysql
+bin/mysqld --defaults-file=/opt/mysql/etc/my.cnf --initialize --user=mysql
 ```
 
 
@@ -92,7 +97,7 @@ TODO: add log, pid file, port, listen address options in my.cnf
 #### 启动服务进程
 
 ```shell
-mysqld_safe --defaults-file=/data2/mysql/etc/my.cnf &
+mysqld_safe --defaults-file=/opt/mysql/etc/my.cnf &
 ```
 
 #### 更新root用户密码
