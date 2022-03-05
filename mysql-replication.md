@@ -66,6 +66,8 @@ echo 'export PATH=$PATH:/usr/local/mysql/bin' >> .bashrc;
 [mysqld]
 basedir=/usr/local/mysql
 datadir=/data2/mysql/data
+#lower_case_table_names=1
+# TODO: add pid file, socket file, tmp file, binlog file dir options
 ```
 
 #### 初始化MySQL数据目录
