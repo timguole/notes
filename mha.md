@@ -124,17 +124,17 @@ master_ip_failover_script= <path-to-master_ip_failover>
 
 #### 修改ip切换脚本
 
-默认情况下，mha自带的master_ip_failover脚本不不能正常运行，需要修改。请将以下代码加入到脚本中的合适位置。修改main函数，在stop分支的eval中调用stop_vip()，在start分支的eval中FIXME_XXX处调用start_vip()
+默认情况下，mha自带的master_ip_failover脚本不不能正常运行，需要修改。请将以下代码加入到脚本中`exit &main();`之前。修改main函数，在stop分支的eval中调用`&stop_vip()`，在start分支的eval中FIXME_XXX处调用`&start_vip()`。
 
 ```perl
 my $vip = '<vip>/netmask';
 my $ssh_start_vip = "/usr/sbin/ip addr add $vip dev <REAL-NIC>";
 my $ssh_stop_vip = "/usr/sbin/ip addr del $vip dev <REAL-NIC>";
 		
-sub start_vip() {
+sub start_vip {
 	`ssh $ssh_user\@$new_master_host \" $ssh_start_vip \"`;
 }
-sub stop_vip() {
+sub stop_vip {
 	return 0  unless  ($ssh_user);
 	`ssh $ssh_user\@$orig_master_host \" $ssh_stop_vip \"`;
 }
@@ -157,13 +157,15 @@ masterha_check_repl --global_conf=/path/to/mha_default.cnf --conf=/path/to/mha-m
 
 #### 启动manager进程
 
+发生切换后，manager进程会退出。
+
 ```shell
 nohup masterha_manager --global_conf=/path/to/mha_default.cnf --conf=/path/to/mha-manager/app1.cnf &
 ```
 
 #### 检查manger状态
 
-正常情况下，输出中包含正在运行的app，pid，master ip信息。
+正常情况下，输出中包含正在运行的app，pid，master ip信息。如果发生了切换，manager进程会退出。
 
 ```shell
 masterha_check_status --global_conf=/path/to/mha_default.cnf --conf=/path/to/mha-manager/app1.cnf

@@ -67,6 +67,7 @@ basedir=/usr/local/mysql
 datadir=/opt/mysql/data
 
 ## with these options, mysqld will not print the temp password for root
+## open these options after initialization
 #lower_case_table_names=1
 #pid-file=/opt/mysql/run/mysql.pid
 #tmpdir=/opt/mysql/tmp
@@ -142,6 +143,7 @@ rpl-semi-sync-source-enabled = 1
 rpl-semi-sync-replica-enabled = 1
 gtid_mode=ON
 enforce-gtid-consistency=ON
+binlog_ignore_db=mysql
 ```
 
 #### 配置replica
@@ -166,7 +168,7 @@ enforce-gtid-consistency=ON
 #### 在source中创建复制用户
 
 ```sql
-CREATE USER 'repl'@'%' IDENTIFIED BY 'password';
+CREATE USER 'repl'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
 GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%';
 ```
 
