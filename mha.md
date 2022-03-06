@@ -124,7 +124,7 @@ master_ip_failover_script= <path-to-master_ip_failover>
 
 #### 修改ip切换脚本
 
-默认情况下，mha自带的master_ip_failover脚本不不能正常运行，需要修改。请将以下代码加入到脚本中`exit &main();`之前。修改main函数，在stop分支的eval中调用`&stop_vip()`，在start分支的eval中FIXME_XXX处调用`&start_vip()`。
+默认情况下，mha自带的master_ip_failover脚本不不能正常运行，需要增加切换VIP的代码。请以实际VIP信息和网卡信息替换下面代码中的相应部分，并将代码加入到脚本中`exit &main();`之前。修改main函数，在stop分支的eval中调用`&stop_vip()`，在start分支的eval中FIXME_XXX处调用`&start_vip()`。
 
 ```perl
 my $vip = '<vip>/netmask';
@@ -135,7 +135,6 @@ sub start_vip {
 	`ssh $ssh_user\@$new_master_host \" $ssh_start_vip \"`;
 }
 sub stop_vip {
-	return 0  unless  ($ssh_user);
 	`ssh $ssh_user\@$orig_master_host \" $ssh_stop_vip \"`;
 }
 ````
