@@ -19,6 +19,56 @@ mount centos8.iso /mnt
 cobbler import --name centos8 --arch aarch64 --path /mnt
 ```
 
+efi模式启动时，不同系统使用的bootloader不同。cobbler支持针对profile设置filename，以此实现不同发行版使用各自的bootloader文件。
+
+```shell
+mkdir -p /var/lib/cobbler/loaders/grub/c8aa64
+
+# then copy grubaa64.efi from iso to grub/c8aa64
+
+# find shim rpm file and extract the shimaa64.efi
+rpm2cpio THE-SHIM-RPM.rpm | cpio -dimv
+
+# copy the extracted shim*.efi fiels to grub/c8aa64
+
+# edit the cobbler profile
+cobbler profile edit --name centos8-aarch64 --filename grub/c8aa64/shimaa64.efi
+```
+
+创建一个cobbler post sync trigger用来处理bootloader配置文件
+
+```shell
+#!/bin/bash
+
+cd /var/lib/tftpboot/grub;
+for s in system/*; do
+        mac=$(basename $s);
+        c="grub.cfg-01-$(echo $mac | tr ':' '-')";
+        cp $s $c;
+
+        # some grub versions have bug.
+        #The required cfg file name has a trailing dash '-'
+        c="grub.cfg-01-$(echo $mac | tr ':' '-')-";
+        cp $s $c;
+done
+
+for loader in /var/lib/cobbler/loaders/grub/*; do
+        if [ -d "${loader}" ]; then
+                cp -r ${loader} /var/lib/tftpboot/grub/
+
+                (
+                        cd /var/lib/tftpboot/grub/$(basename ${loader});
+
+                        for p in ../grub.cfg-01-*; do
+                                cp $p ./;
+                        done
+                )
+        fi
+done
+```
+
+### 尝试 pxe 启动
+
 创建一个 system
 
 ```shell
@@ -33,71 +83,9 @@ cobbler system add --name taishan --profile centos8-aarch64-aarch64 \
 cobbler sync
 ```
 
+目前，aarch64版本的系统似乎仍然不稳定，bootloader获取的cfg文件名可能有错误。可以使用tcpdump抓包确认tftp过程中请求的具体文件名字。
 
-
-### 尝试 pxe 启动
-
-到目前为止，尝试 pxe 启动会失败。原因是；
-
-- cobbler自动生成的配置文件内容和文件名字都有问题。
-- 默认 cobbler 没有提供 aarch64 的 boot loader
-
-首先，把 ISO 中的 EFI boot loader 拷贝到 /var/lib/cobbler/loaders 目录下。然后 执行 cobbler sync，cobbler会在 tftpboot/ 目录下生成配置文件。大致是这个样子：
-
-```shell
-/var/lib/tftpboot/
-├── boot
-├── BOOTAA64.EFI
-├── COPYING.syslinux
-├── COPYING.yaboot
-├── etc
-├── grub
-│?? ├── aarch64_menu_items.cfg
-│?? ├── grub.cfg
-│?? ├── images -> ../images
-│?? ├── local_efi.cfg
-│?? ├── local_legacy.cfg
-│?? ├── local_powerpc-ieee1275.cfg
-│?? ├── system
-│?? │?? ├── A00030F2
-│?? │?? └── cc:64:a6:67:70:bf
-│?? ├── system_link
-│?? │?? └── taishan -> ../system/A00030F2
-│?? └── x86_64_menu_items.cfg
-├── grubaa64.efi
-├── grub.cfg
-├── grub-x86_64.efi
-├── grub-x86.efi
-├── images
-│?? ├── centos7.9-x86_64
-│?? │?? ├── initrd.img
-│?? │?? └── vmlinuz
-│?? └── centos8-aarch64-aarch64
-│??     ├── initrd.img
-│??     └── vmlinuz
-├── images2
-├── menu.c32
-├── ppc
-├── pxelinux.0
-├── pxelinux.cfg
-│?? ├── 01-cc-64-a6-67-70-bf
-│?? ├── A00030F2
-│?? └── default
-├── README
-├── s390x
-└── yaboot
-
-13 directories, 27 files
-```
-
-对比上面的目录结构和 dhcpd 的配置文件，会发现 grubaa64.efi 的路径根本就不对。手工拷贝 grubaa64.efi 到 grub 目录下，尝试 pxe 启动并进行抓包；不断修正错误，就会发现以下内容：
-
-- 服务器从 dhcp 获取到 filename 为 /grub/grubaa64.efi
-- 服务器接下来会向tftp 请求  /grub/grubaa64.efi
-- 继续请求  /grub/grub.cfg-01-MAC
-- 参考 ISO 镜像中的 grub.cfg， /grub/grub.cfg-01-MAC中的 clinux 应该为 linux；cinitrd 应该为 initrd
-
-经过不断修正错误后，最终在 pxe 启动时可以看到类似下面的消息：
+如果出现以下画面，说明内核与initrd都下载到了机器上。
 
 ```shell
 Loading kernel ...
@@ -105,12 +93,7 @@ loading initial ramdisk ...
 EFI stub: Booting Linux Kernel...
 EFI stub: EFI_RNG_PROTOCOL unavailable, no randomness supplied
 EFI stub: Using DTR from configuration table
-EFI stub: Esiting boot services and installing virtual address map...
+EFI stub: Exiting boot services and installing virtual address map...
 ```
 
 接下来要耐心等待，因为没有任何消息输出。安装完成，服务器会自动重启。
-
-### 解决 cobbler 带来的问题
-
-经过手工修改 cobbler 自动生成的配置，aarch64 的 pxe 算是成功了。接下来是如何在每次 cobbler sync 时自动改正 cobbler 的错误。
-

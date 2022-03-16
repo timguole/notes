@@ -68,7 +68,7 @@ datadir=/opt/mysql/data
 
 ## with these options, mysqld will not print the temp password for root
 ## open these options after initialization
-#lower_case_table_names=1
+##lower_case_table_names=1
 #pid-file=/opt/mysql/run/mysql.pid
 #tmpdir=/opt/mysql/tmp
 #socket=/opt/mysql/run/mysql.socket
@@ -144,6 +144,10 @@ rpl-semi-sync-replica-enabled = 1
 gtid_mode=ON
 enforce-gtid-consistency=ON
 binlog_ignore_db=mysql
+
+# this is recommended by mysql gtid doc.
+# the default value is also ROW
+binlog_format=ROW
 ```
 
 #### 配置replica
