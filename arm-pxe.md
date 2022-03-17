@@ -44,12 +44,12 @@ cd /var/lib/tftpboot/grub;
 for s in system/*; do
         mac=$(basename $s);
         c="grub.cfg-01-$(echo $mac | tr ':' '-')";
-        cp $s $c;
+        ln -sf $s $c;
 
         # some grub versions have bug.
         #The required cfg file name has a trailing dash '-'
         c="grub.cfg-01-$(echo $mac | tr ':' '-')-";
-        cp $s $c;
+        ln -sf $s $c;
 done
 
 for loader in /var/lib/cobbler/loaders/grub/*; do
@@ -60,7 +60,7 @@ for loader in /var/lib/cobbler/loaders/grub/*; do
                         cd /var/lib/tftpboot/grub/$(basename ${loader});
 
                         for p in ../grub.cfg-01-*; do
-                                cp $p ./;
+                                ln -sf $p $(basename $p);
                         done
                 )
         fi
