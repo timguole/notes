@@ -35,14 +35,12 @@ Create a new config file: `/etc/apache2/site-available/wsgi.conf`
 <VirtualHost *>
     #ServerName example.com
 
-    WSGIDaemonProcess flaskapp user=wsgi group=wsgi threads=3
+    WSGIDaemonProcess flaskapp user=wsgi group=wsgi processes=1 threads=3 display-name=flaskapp
     WSGIScriptAlias /app /var/www/flaskapp/flaskapp.wsgi
+    WSGIProcessGroup flaskapp
 
     <Directory /var/www/flaskapp>
-        WSGIProcessGroup flaskapp
-        WSGIApplicationGroup %{GLOBAL}
-        Order deny,allow
-        Allow from all
+        Require all granted
     </Directory>
 </VirtualHost>
 ```
