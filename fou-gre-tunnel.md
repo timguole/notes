@@ -32,3 +32,8 @@ ping 1.1.1.1
 ping 1.1.1.2
 ```
 
+### Note
+
+If there is a NAT-device between two hosts, for the host behind the NAT-device the local ip of GRE device is set to the ip of the  host NIC. The NAT-device must be a bidirectional-NAT, that is it do DNAT and SNAT.
+
+If we use pure GRE tunnel (without FOU or GUE), the NAT-device must be a full-NAT, that is it do DNAT and SNAT for all protocols (TCP, UDP and GRE, etc).
