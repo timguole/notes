@@ -1,0 +1,91 @@
+*** VIM Note ***
+
+Normal mode:
+	a:	append after cursor
+	b: 	move a word back
+	c:	work with other motion commands
+		cl:	the same as command 's'
+	d:	delete (need a motion or a text object or "dd")
+	e:	move to the next word-end
+	f:	find a character and move cursor to that character
+	g:	work together with other commands
+		ge:	move to the previous word-end
+		gE:	move to the previous WORD-end
+		gg: go to the first line
+		gt: switch tabs
+	h:	move one character left
+	i:	enter Insert mode
+	j:	move one line down
+	k:	move one line up
+	l:	move one character right
+	m:	set mark (m<char>, <char> in a-z)
+	n:	go to the next match of "/<string>" and '?<string>'
+	o:	open a new line below current line
+	p:	put content of 'yand' or 'deletion' here
+	q:	
+	r:	replace the character under cursor
+	s:	change a letter (delete letter under cursor and enter Insert mode)
+	t:	go to the character before the typed one (t<char>)
+	u:	undo
+	v:	visual mode
+	w:	go to the next word 
+	x:	delete character under cursor
+	y:	yank (need a motion or 'yy' to yand a line)
+	z:	work with other commands
+		zo:	open folded text
+		zc:	fold text
+	A:	append at the end of the line
+	B:	go to the previous word
+	C:	change from cursor to line end
+	D:	delete from cursor to line end
+	E:	go to next WORD (space seperated)
+	F:	move cursor to the character before cursor (see 'f')
+	G:	go to the last line
+	H:	move cursor to the top line of the screen
+	I:	move cursor to the soft start of the line and enter Insert mode
+	J:	join current line and the below one
+	K:	
+	L:	go to the last line of the screen
+	M:	move cursor to the middle line of the screen
+	N:	go to the previous match of '/<string>' and '?<string>'
+	O:	open a new line above
+	P:	put content above current line
+	Q:
+	R:	enter replace mode
+	S:	change whole line
+	T:	reverse of 't'
+	U:	undo line
+	V:	line visual mode
+	W:	go to next WORD
+	X:	delete one character before cursor
+	Y:	yank one line
+	Z:
+	~:	reverse letter case
+	`:	go to mark
+	#:	find word under cursor backward
+	$:	go to line end
+	%:	go to match of (, [, {; go to XX% of a file (following a number)
+	^:	go to the soft start of the line
+	*:	find word under cursor forward
+	0:	go to the hard start of the line
+	::	enter command-line mode
+	;:	go to next match of commands 'f/F' and 't/T'
+	":	put content in register <reg>: "<reg>p
+		yank content into register <reg>: "<reg>y
+	':	in command-line mode, refer to a register (:'a,'bs/old/new/g)
+	<:	less indent
+	>:	more indent
+	,:	go to previous match of commands 'f/F' and 't/T'
+	.:	repeat last modification command
+	?:	search backward
+	/:	search forward
+	{:	previous paragraph
+	[
+
+Ctrl-<key>: (Normal mode)
+	b:	scroll one screen back
+	d:	half screen down
+	f:	scroll one screen forward
+	r:	redo
+	u:	half screen up
+	v:	block visual mode
