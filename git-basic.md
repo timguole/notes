@@ -1,4 +1,4 @@
-# git basic
+# Git Basic
 
 ## 安装
 
@@ -188,5 +188,79 @@ git push REMOTE BRANCH
 ```shell
 git archive --format=tar --prefix=the-project/ HEAD \
 	| gzip > the-project.tar.gz
+```
+
+## Git http 服务器
+
+安装软件包
+
+```shell
+sudo apt install fcgiwrap nginx git apache2-utils
+```
+
+创建git仓库目录
+
+```shell
+cd /var/www
+mkdir git-repos
+cd git-repos
+mkdir myproject.git
+cd myproject.git
+ git init --bare --shared
+git update-server-info
+sudo chown www-data:www-data -R /var/www/git-repos/
+```
+
+配置nginx（/etc/nginx/nginx.conf）
+
+```nginx
+http {
+        server {
+                listen 80;
+                server_name  git.example.com;
+                client_max_body_size 0;
+
+                root /var/www/git-repos;
+
+                location ~ (/.*) {
+                        auth_basic "Restricted";
+                        auth_basic_user_file /etc/nginx/.gitpasswd;
+                        fastcgi_pass  unix:/var/run/fcgiwrap.socket;
+                        include       fastcgi_params;
+                        fastcgi_param SCRIPT_FILENAME     /usr/lib/git-core/git-http-backend;
+                        fastcgi_param GIT_HTTP_EXPORT_ALL "";
+                        fastcgi_param GIT_PROJECT_ROOT    /var/www/git-repos;
+                        fastcgi_param PATH_INFO           $1;
+                }
+        }
+}
+```
+
+创建http basic auth用户和密码
+
+```shell
+sudo htpasswd -c /etc/nginx/.gitpasswd USER
+```
+
+启动服务
+
+```shell
+sudo systemctl restart fcgiwrap.service
+sudo systemctl restart fcgiwrap.socket
+sudo nginx -t
+sudo systemctl restart nginx.service
+```
+
+测试服务
+
+```shell
+mkdir myproject
+cd myproject
+git init
+echo foobar > README.txt
+git add .
+git commit
+git remote add orign http://USER:PASS@git.example.com/myproject.git
+git push origin master
 ```
 
