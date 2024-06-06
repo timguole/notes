@@ -239,7 +239,8 @@ http {
 创建http basic auth用户和密码
 
 ```shell
-sudo htpasswd -c /etc/nginx/.gitpasswd USER
+# if the file does not exist, use '-c' option
+sudo htpasswd /etc/nginx/.gitpasswd USER
 ```
 
 启动服务
