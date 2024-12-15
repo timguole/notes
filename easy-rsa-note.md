@@ -38,3 +38,13 @@ cd ../pki-ca
 ./easy-rsa sign-req myserver # this will create the signed server cert in ./pki/issued/
 ```
 
+At this point, we have four files:
+
+- CA certificate
+- CA key
+- self-signed server certificate
+- server key
+
+## What's next?
+
+Now, we can configure server programs (nginx, httpd, openvpn) to use the server certificate and server key. Optionally, we can install the CA certificate on server OS and client OS.
