@@ -194,8 +194,15 @@ git archive --format=tar --prefix=the-project/ HEAD \
 
 安装软件包
 
+> 提示：
+>
+> 在红帽系发行版中，fcgiwrap需要通过systemctl enalbe fcgiwrap@USER形式分别启用对应的service和socket。
+
 ```shell
-sudo apt install fcgiwrap nginx git apache2-utils
+sudo apt install fcgiwrap nginx git
+
+# if use htpasswd to generate password hash
+sudo apt install apache2-utils
 ```
 
 创建git仓库目录
@@ -265,7 +272,9 @@ sudo systemctl restart nginx.service
 
 > 提示：
 >
-> 如果密码或者名字中有url特殊字符，可以使用 python 的 urllib.parse.quote()函数进行转义。
+> 1、如果密码或者名字中有url特殊字符，可以使用 python 的 urllib.parse.quote()函数进行转义。
+>
+> 2、如果使用https协议并且使用的自签名证书，则需要关闭git的证书验证功能：git config --glocal http.sslVerify False
 
 ```shell
 mkdir myproject
