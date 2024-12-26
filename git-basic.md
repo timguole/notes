@@ -218,6 +218,8 @@ http {
         server {
                 listen 80;
                 server_name  git.example.com;
+        
+                # 0 means no limit.
                 client_max_body_size 0;
 
                 root /var/www/git-repos;
@@ -237,11 +239,17 @@ http {
 }
 ```
 
-创建http basic auth用户和密码
+创建http basic auth用户和密码。nginx支持多种密码格式，可以使用htpasswd或者openssl生成密码哈希。密码文件每行格式如下：
+
+name:password-hash[:comment]
 
 ```shell
+# htpasswd
 # if the file does not exist, use '-c' option
 sudo htpasswd /etc/nginx/.gitpasswd USER
+
+# openssl
+openssl passwd -6
 ```
 
 启动服务
@@ -254,6 +262,10 @@ sudo systemctl restart nginx.service
 ```
 
 测试服务
+
+> 提示：
+>
+> 如果密码或者名字中有url特殊字符，可以使用 python 的 urllib.parse.quote()函数进行转义。
 
 ```shell
 mkdir myproject
