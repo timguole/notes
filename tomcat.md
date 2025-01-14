@@ -40,7 +40,35 @@ cp webapp.war TOMCAT/webapps/
 
 ## Configure tomcat
 
-Here just shows how to use the `<security-constraint>`. In TOMCAT/conf/web.xml, add the following under `<web-app>` tag.
+#### Configure HTTPS
+
+First, generate a certificate with keytool
+
+```shell
+# use keytool (provided by JDK) to generate a x509 certificate
+keytool -genkey -alias tomcat -keyalg RSA -validity 365
+```
+
+Then, configure tomcat to use the certificate. Edit file: TOMCAT/conf/server.xml
+
+```xml
+<Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+		maxThreads="150" SSLEnabled="true"
+		maxParameterCount="1000">
+	<UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+	<SSLHostConfig>
+		<Certificate certificateKeystoreFile="${user.home}/.keystore"
+				certificateKeystorePassword="tomcat10"
+				type="RSA" />
+	</SSLHostConfig>
+</Connector>
+```
+
+
+
+#### security-constraint
+
+Here shows how to use the `<security-constraint>`. In TOMCAT/conf/web.xml, add the following under `<web-app>` tag.
 
 > IMPORTANT:
 >
