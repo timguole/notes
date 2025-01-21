@@ -1,4 +1,6 @@
-# nc remote shell
+# nc basics
+
+## run remote shell
 
 Use `nc` to provide a remote shell.
 
@@ -13,5 +15,15 @@ cat /tmp/nc-shell.fifo | nc -l server-ip server-port | bash -li > /tmp/nc-shell.
 
 ``` shell
 nc -N server-ip server-port
+```
+
+
+
+## test port connectivity
+
+```shell
+# -z: zero-I/O mode. establish connection and exit.
+# -w: wait at most N seconds before connected, then timeout
+nc -z -w 3 IP PORT
 ```
 
