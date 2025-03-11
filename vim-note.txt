@@ -88,4 +88,35 @@ Ctrl-<key>: (Normal mode)
 	f:	scroll one screen forward
 	r:	redo
 	u:	half screen up
-	v:	block visual mode
+	v<<ARROW-KEY>:	block visual mode
+	w<ARROW-KEY>: switch between windows
+
+Commands: (:COMMAND)
+* vim has a similar syntax as `sed` for specifying range
+	buffers: list all buffers
+	bd[elete]: close a buffer
+	N,Mbd[elete]: close buffers from N to M in the list
+	bfirst: switch to the first buffer
+	blast: switch to the last buffer
+	bn[ext]: switch to the next buffer
+	bp[revious]: switch to the previous buffer
+	E[xplor]: explore files and directories
+	e[dit] <file-name>: open a file
+	files: same as `buffers
+	ls: same as `buffers`
+	q: quit
+	r[ead] <file-name>: read file content into buffer
+	r!<cmd>: run shell command and fetch output
+	[RANGE]s///[g]: text substitution
+	set <option>: enable/disable functions
+	[RANGE]sort: sort all lines in the buffer 
+	split <file-name>: split the window horizentally and open a file
+	vs[plit] <file-name>: vertical split
+	w: write buffer to disk (save file)
+
+~/.vimrc
+	set bg=dark
+	set number
+	set tabstop=4
+	set hidden
+	set smartindent
